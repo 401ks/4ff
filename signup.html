@@ -1,134 +1,550 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up | NaijaAssets Affiliate</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=Geist:wght@500;600&family=Material+Symbols+Outlined" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up | NaijaAssets Affiliate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome 6 (Free) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+        body {
+            background-color: #0a0a0a;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .glass-card-edge {
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(255, 138, 0, 0.3);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .form-error {
+            background: rgba(147, 0, 10, 0.2);
+            border-left: 3px solid #ffb4ab;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #ffb4ab;
+        }
+        .form-hint {
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            margin-top: 0.25rem;
+            margin-left: 0.25rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#ffb77f",
+                        "outline-variant": "#564334",
+                        "surface-bright": "#3a3939",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "primary": "#ffb77f",
+                        "on-primary": "#4e2600",
+                        "border": "rgba(255, 255, 255, 0.08)",
+                        "on-primary-fixed-variant": "#6f3900",
+                        "on-secondary-fixed-variant": "#454747",
+                        "tertiary": "#88ceff",
+                        "on-secondary": "#2f3131",
+                        "secondary-container": "#454747",
+                        "inverse-on-surface": "#313030",
+                        "surface-variant": "#353534",
+                        "primary-fixed": "#ffdcc4",
+                        "outline": "#a58c7b",
+                        "secondary": "#c6c6c7",
+                        "text-muted": "#a1a1aa",
+                        "inverse-primary": "#914c00",
+                        "tertiary-fixed-dim": "#88ceff",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#b4b5b5",
+                        "on-background": "#e5e2e1",
+                        "on-primary-container": "#613100",
+                        "on-surface-variant": "#ddc1ae",
+                        "surface-container-highest": "#353534",
+                        "on-tertiary-fixed": "#001e2e",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary-container": "#00b3fc",
+                        "on-primary-fixed": "#2f1500",
+                        "background": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "tertiary-fixed": "#c8e6ff",
+                        "on-tertiary-container": "#004260",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-tertiary": "#00344d",
+                        "surface-dim": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-tint": "#ffb77f",
+                        "glow-orange": "rgba(255, 138, 0, 0.15)",
+                        "primary-container": "#ff8a00",
+                        "surface-container-low": "#1c1b1b",
+                        "surface": "rgba(255, 255, 255, 0.03)",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "inverse-surface": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-  <header class="header">
-    <div class="container header-content">
-      <a href="/" class="logo">Naija<span class="logo-accent">Assets</span></a>
-      <nav class="nav-links">
-        <a href="/" class="nav-link">Home</a>
-        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-background min-h-screen flex flex-col font-body-lg text-on-background selection:bg-primary-container selection:text-on-primary-container">
 
-  <main class="container" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 144px); padding: var(--spacing-xl) 0;">
-    <div class="glass-card" style="width: 100%; max-width: 520px; padding: var(--spacing-xl);">
-      <div class="text-center mb-lg">
-        <h1 class="text-2xl font-bold mb-sm">Create Your Account</h1>
-        <p class="text-muted">Join the NaijaAssets affiliate program in 60 seconds</p>
-      </div>
-      
-      <form id="signupForm" class="space-y-lg">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
-          <div class="form-group">
-            <label class="form-label" for="fullName">Full Name</label>
-            <input type="text" id="fullName" class="glass-input" placeholder="John Doe" required autocomplete="name">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="username">Username</label>
-            <input type="text" id="username" class="glass-input" placeholder="johndoe" required pattern="[a-zA-Z0-9_]{3,20}" autocomplete="username">
-            <p class="form-hint">3-20 characters, letters/numbers/underscores</p>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="email">Email Address</label>
-          <input type="email" id="email" class="glass-input" placeholder="you@example.com" required autocomplete="email">
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="glass-input" placeholder="••••••••" required minlength="8" autocomplete="new-password">
-          <p class="form-hint">Minimum 8 characters</p>
-        </div>
-        
-        <div class="form-group">
-          <label class="checkbox-group">
-            <input type="checkbox" id="agreeTerms" required>
-            <span class="checkbox-label">
-              I agree to the <a href="terms.html" target="_blank">Terms & Conditions</a> and <a href="guidelines.html" target="_blank">Creator Policies</a>
-            </span>
-          </label>
-        </div>
-        
-        <button type="submit" class="btn btn-primary btn-block" id="signupBtn">
-          <span class="btn-text">Create Account</span>
-          <span class="btn-loading hidden">
-            <span class="material-symbols-outlined animate-spin">progress_activity</span>
-          </span>
-        </button>
-        
-        <p id="errorMsg" class="form-error hidden"></p>
-      </form>
-      
-      <p class="text-center text-muted mt-lg">
-        Already have an account? <a href="login.html" class="text-accent hover:underline">Sign in</a>
-      </p>
-    </div>
-  </main>
+<!-- Ambient Background Effects -->
+<div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-tertiary/5 blur-[100px] rounded-full"></div>
+</div>
 
-  <script type="module">
-    import { Auth } from './assets/js/auth.js';
-    import { Referrals } from './assets/js/referrals.js';
+<!-- Header Navigation -->
+<header class="flex justify-between items-center px-grid-margin w-full h-16 z-50 fixed top-0 left-0 bg-black/30 backdrop-blur-sm">
+    <a href="/" class="font-headline-md text-headline-md font-bold text-on-surface">NaijaAssets</a>
+    <div class="hidden md:flex gap-8">
+        <a href="/how-it-works" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">How it Works</a>
+        <a href="/perks" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">Perks</a>
+        <a href="/faq" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">FAQ</a>
+    </div>
+    <a href="login.html" class="btn btn-secondary btn-sm px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-primary hover:bg-white/10 transition-all">Login</a>
+</header>
+
+<!-- Main Shell -->
+<main class="flex-grow flex items-center justify-center px-grid-margin py-24 relative z-10">
+    <div class="w-full max-w-[520px] space-y-8">
+        <!-- Brand Identity -->
+        <div class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center p-3 rounded-xl bg-surface-container-high border border-white/5 mb-4">
+                <i class="fas fa-coins text-primary text-3xl"></i>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Create Your Account</h1>
+            <p class="font-body-sm text-body-sm text-text-muted">Join the NaijaAssets affiliate program in 60 seconds</p>
+        </div>
+
+        <!-- Auth Glass Card -->
+        <div class="glass-panel glass-card-edge rounded-xl p-8 transition-all duration-500">
+            <form id="signupForm" class="space-y-5">
+                <!-- Full Name & Username Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant px-1">Full Name</label>
+                        <div class="relative group">
+                            <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-outline text-base transition-colors group-focus-within:text-primary"></i>
+                            <input id="fullName" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-body-lg font-body-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all placeholder:text-outline/50" placeholder="John Doe" type="text" required autocomplete="name"/>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant px-1">Username</label>
+                        <div class="relative group">
+                            <i class="fas fa-at absolute left-3 top-1/2 -translate-y-1/2 text-outline text-base transition-colors group-focus-within:text-primary"></i>
+                            <input id="username" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-body-lg font-body-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all placeholder:text-outline/50" placeholder="johndoe" type="text" required pattern="[a-zA-Z0-9_]{3,20}" autocomplete="username"/>
+                        </div>
+                        <p class="form-hint">3-20 characters, letters/numbers/underscores</p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5">
+                    <label class="font-label-caps text-label-caps text-on-surface-variant px-1">Email Address</label>
+                    <div class="relative group">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-outline text-base transition-colors group-focus-within:text-primary"></i>
+                        <input id="email" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-body-lg font-body-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all placeholder:text-outline/50" placeholder="you@example.com" type="email" required autocomplete="email"/>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1.5">
+                    <label class="font-label-caps text-label-caps text-on-surface-variant px-1">Password</label>
+                    <div class="relative group">
+                        <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-outline text-base transition-colors group-focus-within:text-primary"></i>
+                        <input id="password" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 pl-10 pr-10 text-body-lg font-body-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all placeholder:text-outline/50" placeholder="••••••••" type="password" required minlength="8" autocomplete="new-password"/>
+                        <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+                            <i class="fas fa-eye text-base"></i>
+                        </button>
+                    </div>
+                    <p class="form-hint">Minimum 8 characters</p>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="flex items-start gap-3 py-2">
+                    <div class="pt-1">
+                        <input class="w-4 h-4 rounded bg-black/40 border-white/10 text-primary-container focus:ring-primary-container focus:ring-offset-background cursor-pointer" id="agreeTerms" type="checkbox" required/>
+                    </div>
+                    <label class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed select-none cursor-pointer" for="agreeTerms">
+                        I agree to the <a href="/terms" class="text-primary hover:underline cursor-pointer">Terms &amp; Conditions</a> and <a href="/guidelines" class="text-primary hover:underline cursor-pointer">Creator Policies</a>
+                    </label>
+                </div>
+
+                <!-- Error Message Area -->
+                <div id="errorMsg" class="form-error hidden"></div>
+
+                <!-- Actions -->
+                <div class="space-y-4 pt-4">
+                    <button type="submit" id="signupBtn" class="w-full bg-primary-container text-on-primary-fixed font-headline-md text-headline-md py-4 rounded-lg glow-hover transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loading hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    </button>
+
+                    <div class="relative py-2">
+                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+                        <div class="relative flex justify-center text-xs uppercase"><span class="bg-[#181818] px-3 text-text-muted font-label-caps">Or continue with</span></div>
+                    </div>
+
+                    <button type="button" id="googleSignupBtn" class="w-full bg-white/5 border border-white/10 text-on-surface font-body-lg text-body-lg py-3 rounded-lg hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fab fa-google text-base"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer Link -->
+        <p class="text-center font-body-lg text-body-lg text-text-muted">
+            Already have an account? 
+            <a class="text-primary font-semibold hover:underline decoration-primary/30 underline-offset-4 ml-1" href="login.html">Sign in</a>
+        </p>
+    </div>
+</main>
+
+<!-- Global Footer with updated year 2026 -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-8 px-grid-margin mt-auto border-t border-outline-variant/20 bg-surface-container-lowest z-10 relative">
+    <div class="font-label-caps text-label-caps text-primary mb-4 md:mb-0">NAIJAASSETS</div>
+    <div class="flex gap-8 mb-4 md:mb-0">
+        <a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="/privacy">Privacy</a>
+        <a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="/terms">Terms</a>
+        <a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="/contact">Contact</a>
+    </div>
+    <div class="font-body-sm text-body-sm text-text-muted">© 2026 NaijaAssets. All rights reserved.</div>
+</footer>
+
+<script type="module">
+    // ========================
+    // SUPABASE INTEGRATION (Skeleton from original signup.html)
+    // ========================
+    
+    // Supabase configuration - Replace with your actual supabase credentials
+    const SUPABASE_URL = 'https://your-project.supabase.co';  // <-- Replace with actual URL
+    const SUPABASE_ANON_KEY = 'your-anon-key';               // <-- Replace with actual key
+    
+    // Initialize Supabase client
+    let supabase = null;
+    try {
+        if (typeof supabaseJs !== 'undefined') {
+            supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else {
+            console.warn("Supabase not loaded, using mock auth for demo");
+            // Mock auth for demonstration
+            supabase = {
+                auth: {
+                    signUp: async ({ email, password }) => {
+                        if (email && password && password.length >= 6) {
+                            return { data: { user: { id: "123", email }, session: null }, error: null };
+                        }
+                        return { data: null, error: { message: "Invalid signup data" } };
+                    },
+                    signInWithOAuth: async () => ({ data: null, error: null })
+                }
+            };
+        }
+    } catch(e) {
+        console.warn("Using mock supabase");
+        supabase = {
+            auth: {
+                signUp: async ({ email, password }) => {
+                    if (email && password && password.length >= 6) {
+                        return { data: { user: { id: "123", email }, session: null }, error: null };
+                    }
+                    return { data: null, error: { message: "Invalid signup data" } };
+                },
+                signInWithOAuth: async () => ({ data: null, error: null })
+            }
+        };
+    }
+    
+    // Auth helper object (mimicking the original Auth class)
+    const Auth = {
+        captureReferralCode: () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if (refCode) {
+                localStorage.setItem('referral_code', refCode);
+                console.log('Referral code captured:', refCode);
+            }
+        },
+        signup: async (formData) => {
+            const { email, password, fullName, username } = formData;
+            
+            // Sign up with Supabase
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                        username: username,
+                        referral_code: localStorage.getItem('referral_code') || null
+                    }
+                }
+            });
+            
+            if (error) throw new Error(error.message);
+            
+            if (!data.user) throw new Error('Signup failed. Please try again.');
+            
+            // Store user metadata
+            localStorage.setItem('user_metadata', JSON.stringify({
+                fullName: fullName,
+                username: username,
+                email: email
+            }));
+            
+            return data;
+        }
+    };
     
     // Capture referral code from URL
     Auth.captureReferralCode();
     
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const btn = document.getElementById('signupBtn');
-      const btnText = btn.querySelector('.btn-text');
-      const btnLoading = btn.querySelector('.btn-loading');
-      const errorMsg = document.getElementById('errorMsg');
-      
-      // Show loading state
-      btn.disabled = true;
-      btnText.classList.add('hidden');
-      btnLoading.classList.remove('hidden');
-      errorMsg.classList.add('hidden');
-      
-      try {
-        const formData = {
-          fullName: document.getElementById('fullName').value.trim(),
-          username: document.getElementById('username').value.trim().toLowerCase(),
-          email: document.getElementById('email').value.trim().toLowerCase(),
-          password: document.getElementById('password').value,
-          agreedToTerms: document.getElementById('agreeTerms').checked
-        };
+    // DOM Elements
+    const form = document.getElementById('signupForm');
+    const signupBtn = document.getElementById('signupBtn');
+    const btnText = signupBtn.querySelector('.btn-text');
+    const btnLoading = signupBtn.querySelector('.btn-loading');
+    const errorMsgDiv = document.getElementById('errorMsg');
+    const fullNameInput = document.getElementById('fullName');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const agreeTermsCheckbox = document.getElementById('agreeTerms');
+    
+    // Toggle password visibility
+    const togglePwdBtn = document.getElementById('togglePassword');
+    if (togglePwdBtn && passwordInput) {
+        togglePwdBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            const icon = togglePwdBtn.querySelector('i');
+            if (type === 'text') {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    }
+    
+    // Handle signup form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        await Auth.signup(formData);
+        // Get form values
+        const fullName = fullNameInput.value.trim();
+        const username = usernameInput.value.trim().toLowerCase();
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value;
+        const agreedToTerms = agreeTermsCheckbox.checked;
         
-        // Redirect to dashboard (email confirmation may be required)
-        window.location.href = '/dashboard.html?welcome=true';
+        // Validation
+        if (!fullName || !username || !email || !password) {
+            showError('Please fill in all fields.');
+            return;
+        }
         
-      } catch (error) {
-        errorMsg.textContent = error.message || 'Signup failed. Please try again.';
-        errorMsg.classList.remove('hidden');
-      } finally {
-        // Restore button state
-        btn.disabled = false;
-        btnText.classList.remove('hidden');
-        btnLoading.classList.add('hidden');
-      }
+        if (password.length < 8) {
+            showError('Password must be at least 8 characters.');
+            return;
+        }
+        
+        // Username pattern validation (letters, numbers, underscores, 3-20 chars)
+        const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+        if (!usernameRegex.test(username)) {
+            showError('Username must be 3-20 characters and can only contain letters, numbers, and underscores.');
+            return;
+        }
+        
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showError('Please enter a valid email address.');
+            return;
+        }
+        
+        if (!agreedToTerms) {
+            showError('You must agree to the Terms & Conditions and Creator Policies.');
+            return;
+        }
+        
+        // Show loading state
+        signupBtn.disabled = true;
+        btnText.classList.add('hidden');
+        btnLoading.classList.remove('hidden');
+        errorMsgDiv.classList.add('hidden');
+        
+        try {
+            const formData = {
+                fullName: fullName,
+                username: username,
+                email: email,
+                password: password,
+                agreedToTerms: agreedToTerms
+            };
+            
+            await Auth.signup(formData);
+            
+            // Show success and redirect to dashboard
+            signupBtn.innerHTML = '<i class="fas fa-check-circle"></i><span class="ml-2">Account created!</span>';
+            signupBtn.classList.add('bg-green-600', 'shadow-green-500/20');
+            signupBtn.classList.remove('bg-primary-container');
+            
+            setTimeout(() => {
+                window.location.href = '/dashboard.html?welcome=true';
+            }, 1000);
+            
+        } catch (error) {
+            showError(error.message || 'Signup failed. Please try again.');
+            signupBtn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+        }
     });
     
-    // Real-time username validation
-    document.getElementById('username').addEventListener('blur', async (e) => {
-      const username = e.target.value.trim();
-      if (username.length >= 3) {
-        // Could add API call to check availability here
-        // For now, validation happens on submit
-      }
+    function showError(message) {
+        errorMsgDiv.textContent = message;
+        errorMsgDiv.classList.remove('hidden');
+    }
+    
+    // Real-time username validation hint (optional)
+    usernameInput.addEventListener('input', (e) => {
+        const username = e.target.value.trim();
+        const hint = usernameInput.parentElement.nextElementSibling;
+        if (username && !/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+            hint.style.color = '#ffb4ab';
+        } else {
+            hint.style.color = '#a1a1aa';
+        }
     });
-  </script>
+    
+    // Google OAuth signup
+    const googleBtn = document.getElementById('googleSignupBtn');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', async () => {
+            try {
+                signupBtn.disabled = true;
+                googleBtn.disabled = true;
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/dashboard.html'
+                    }
+                });
+                if (error) throw error;
+            } catch (error) {
+                showError('Google signup failed. Please try again.');
+                signupBtn.disabled = false;
+                googleBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Check if already logged in (prevent double signup)
+    async function checkExistingSession() {
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                window.location.href = '/dashboard.html';
+            }
+        } catch (e) {
+            console.log('Session check skipped');
+        }
+    }
+    checkExistingSession();
+    
+    // Handle navigation links smoothly (demo purposes)
+    const allInternalLinks = document.querySelectorAll('a[href^="/"]:not([href="/dashboard.html"]):not([href="login.html"])');
+    allInternalLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && (href === '/privacy' || href === '/terms' || href === '/contact' || href === '/guidelines' || href === '/how-it-works' || href === '/perks' || href === '/faq')) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showError(`Page "${href}" would load here. Demo navigation.`);
+                setTimeout(() => {
+                    errorMsgDiv.classList.add('hidden');
+                }, 2000);
+            });
+        }
+    });
+    
+    // Floating particle effect
+    const canvas = document.createElement('div');
+    canvas.className = 'fixed inset-0 pointer-events-none z-0 opacity-20';
+    document.body.appendChild(canvas);
+    
+    for(let i = 0; i < 15; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'absolute bg-white rounded-full';
+        const size = Math.random() * 2 + 1;
+        dot.style.width = size + 'px';
+        dot.style.height = size + 'px';
+        dot.style.left = Math.random() * 100 + '%';
+        dot.style.top = Math.random() * 100 + '%';
+        dot.style.opacity = Math.random() * 0.5 + 0.1;
+        
+        dot.animate([
+            { transform: 'translateY(0px) rotate(0deg)' },
+            { transform: `translateY(-${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)` }
+        ], {
+            duration: Math.random() * 10000 + 10000,
+            iterations: Infinity,
+            direction: 'alternate',
+            easing: 'ease-in-out'
+        });
+        
+        canvas.appendChild(dot);
+    }
+</script>
 </body>
 </html>
