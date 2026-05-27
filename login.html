@@ -1,113 +1,488 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | NaijaAssets Affiliate</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=Geist:wght@500;600&family=Material+Symbols+Outlined" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Login | NaijaAssets</title>
+  <!-- Tailwind CSS + Font Awesome -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+  <!-- Font Awesome 6 (Free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed-dim": "#ffb77f",
+            "outline-variant": "#564334",
+            "surface-bright": "#3a3939",
+            "error-container": "#93000a",
+            "on-error-container": "#ffdad6",
+            "on-error": "#690005",
+            "primary": "#ffb77f",
+            "on-primary": "#4e2600",
+            "border": "rgba(255, 255, 255, 0.08)",
+            "on-primary-fixed-variant": "#6f3900",
+            "on-secondary-fixed-variant": "#454747",
+            "tertiary": "#88ceff",
+            "on-secondary": "#2f3131",
+            "secondary-container": "#454747",
+            "inverse-on-surface": "#313030",
+            "surface-variant": "#353534",
+            "primary-fixed": "#ffdcc4",
+            "outline": "#a58c7b",
+            "secondary": "#c6c6c7",
+            "text-muted": "#a1a1aa",
+            "inverse-primary": "#914c00",
+            "tertiary-fixed-dim": "#88ceff",
+            "error": "#ffb4ab",
+            "on-secondary-container": "#b4b5b5",
+            "on-background": "#e5e2e1",
+            "on-primary-container": "#613100",
+            "on-surface-variant": "#ddc1ae",
+            "surface-container-highest": "#353534",
+            "on-tertiary-fixed": "#001e2e",
+            "surface-container": "#201f1f",
+            "secondary-fixed": "#e2e2e2",
+            "surface-container-lowest": "#0e0e0e",
+            "tertiary-container": "#00b3fc",
+            "on-primary-fixed": "#2f1500",
+            "background": "#131313",
+            "on-surface": "#e5e2e1",
+            "tertiary-fixed": "#c8e6ff",
+            "on-tertiary-container": "#004260",
+            "secondary-fixed-dim": "#c6c6c7",
+            "on-tertiary": "#00344d",
+            "surface-dim": "#131313",
+            "surface-container-high": "#2a2a2a",
+            "surface-tint": "#ffb77f",
+            "glow-orange": "rgba(255, 138, 0, 0.15)",
+            "primary-container": "#ff8a00",
+            "surface-container-low": "#1c1b1b",
+            "surface": "rgba(255, 255, 255, 0.03)",
+            "on-tertiary-fixed-variant": "#004c6d",
+            "inverse-surface": "#e5e2e1",
+            "on-secondary-fixed": "#1a1c1c"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            "stack-gap": "0.75rem",
+            "grid-margin": "2rem",
+            "section-padding": "4rem",
+            "grid-gutter": "1rem"
+          },
+          fontFamily: {
+            "body-sm": ["Inter"],
+            "label-caps": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "display": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-lg": ["Inter"]
+          },
+          fontSize: {
+            "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+            "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+            "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #e5e2e1;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent, rgba(255, 138, 0, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .glow-hover:hover {
+      box-shadow: 0 0 20px rgba(255, 138, 0, 0.3);
+    }
+    .bg-mesh {
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 138, 0, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(136, 206, 255, 0.05) 0%, transparent 40%);
+    }
+    .input-icon {
+      transition: color 0.2s ease;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .form-error {
+      background: rgba(147, 0, 10, 0.2);
+      border-left: 3px solid #ffb4ab;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: #ffb4ab;
+      margin-top: 1rem;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
-<body>
-  <header class="header">
-    <div class="container header-content">
-      <a href="/" class="logo">Naija<span class="logo-accent">Assets</span></a>
-      <nav class="nav-links">
-        <a href="/" class="nav-link">Home</a>
-        <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-mesh min-h-screen flex flex-col">
 
-  <main class="container" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 144px); padding: var(--spacing-xl) 0;">
-    <div class="glass-card" style="width: 100%; max-width: 480px; padding: var(--spacing-xl);">
-      <div class="text-center mb-lg">
-        <h1 class="text-2xl font-bold mb-sm">Welcome Back</h1>
-        <p class="text-muted">Sign in to access your affiliate dashboard</p>
+<!-- Header Navigation with proper hrefs -->
+<header class="flex justify-between items-center px-grid-margin w-full h-16 z-50 fixed top-0 left-0">
+  <a href="/" class="font-headline-md text-headline-md font-bold text-on-surface">NaijaAssets</a>
+  <div class="hidden md:flex gap-8">
+    <a href="/how-it-works" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">How it Works</a>
+    <a href="/perks" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">Perks</a>
+    <a href="/faq" class="text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-opacity">FAQ</a>
+  </div>
+  <a href="/contact" class="text-primary font-body-sm text-body-sm hover:opacity-80 transition-opacity">Contact Support</a>
+</header>
+
+<main class="flex-grow flex items-center justify-center p-6 relative">
+  <!-- Atmospheric Decoration -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 blur-[128px] rounded-full"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-tertiary/5 blur-[96px] rounded-full"></div>
+
+  <!-- Login Container -->
+  <div class="w-full max-w-md relative">
+    <div class="glass-card rounded-xl p-8 md:p-10 flex flex-col items-center">
+      <!-- Brand Lockup -->
+      <div class="mb-8 text-center">
+        <div class="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center mb-4 mx-auto shadow-lg shadow-primary/20">
+          <i class="fas fa-coins text-on-primary-fixed text-2xl"></i>
+        </div>
+        <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Welcome Back</h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Sign in to access your affiliate dashboard</p>
       </div>
-      
-      <form id="loginForm" class="space-y-lg">
-        <div class="form-group">
-          <label class="form-label" for="email">Email Address</label>
-          <input type="email" id="email" class="glass-input" placeholder="you@example.com" required autocomplete="email">
+
+      <form id="loginForm" class="w-full space-y-6" method="POST">
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label class="font-label-caps text-label-caps text-on-surface-variant block ml-1" for="email">Email Address</label>
+          <div class="relative group">
+            <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-base"></i>
+            <input class="w-full bg-black/40 border border-white/10 rounded-lg py-3.5 pl-12 pr-4 font-body-lg text-body-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-surface-variant" id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email"/>
+          </div>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="glass-input" placeholder="••••••••" required autocomplete="current-password">
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label class="font-label-caps text-label-caps text-on-surface-variant block ml-1" for="password">Password</label>
+          <div class="relative group">
+            <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-base"></i>
+            <input class="w-full bg-black/40 border border-white/10 rounded-lg py-3.5 pl-12 pr-12 font-body-lg text-body-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-surface-variant" id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password"/>
+            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+              <i class="fas fa-eye text-base"></i>
+            </button>
+          </div>
         </div>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
-          <label class="checkbox-group">
-            <input type="checkbox" id="remember">
-            <span class="checkbox-label">Remember me</span>
+
+        <!-- Options -->
+        <div class="flex items-center justify-between py-1">
+          <label class="flex items-center gap-2 cursor-pointer group">
+            <input type="checkbox" id="remember" class="w-4 h-4 rounded border-white/10 bg-black/40 text-primary-container focus:ring-primary-container/20 focus:ring-offset-0"/>
+            <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Remember me</span>
           </label>
-          <a href="#" class="text-sm text-accent hover:underline">Forgot password?</a>
+          <a href="/forgot-password" class="font-body-sm text-body-sm text-primary hover:underline underline-offset-4 transition-all">Forgot password?</a>
         </div>
-        
-        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+
+        <!-- Submit Button -->
+        <button type="submit" id="loginBtn" class="w-full bg-primary-container text-on-primary-container font-headline-md text-headline-md py-4 rounded-lg shadow-xl shadow-primary/10 hover:shadow-lg hover:bg-primary-container/90 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2">
+          <i class="fas fa-arrow-right-to-bracket text-lg"></i>
           <span class="btn-text">Sign In</span>
           <span class="btn-loading hidden">
-            <span class="material-symbols-outlined animate-spin">progress_activity</span>
+            <i class="fas fa-circle-notch fa-spin text-lg"></i>
           </span>
         </button>
         
-        <p id="errorMsg" class="form-error hidden"></p>
+        <div id="errorMsg" class="form-error hidden"></div>
       </form>
-      
-      <p class="text-center text-muted mt-lg">
-        Don't have an account? <a href="signup.html" class="text-accent hover:underline">Create one</a>
+
+      <!-- Social/Alt Login -->
+      <div class="w-full mt-10">
+        <div class="relative flex items-center mb-8">
+          <div class="flex-grow border-t border-white/5"></div>
+          <span class="px-4 font-label-caps text-label-caps text-surface-variant">Or continue with</span>
+          <div class="flex-grow border-t border-white/5"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <button type="button" id="googleLoginBtn" class="flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/5 py-3 rounded-lg font-body-sm text-body-sm transition-all group">
+            <i class="fab fa-google text-on-surface-variant group-hover:text-on-surface text-base"></i>
+            <span>Google</span>
+          </button>
+          <button type="button" id="walletLoginBtn" class="flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/5 py-3 rounded-lg font-body-sm text-body-sm transition-all group">
+            <i class="fas fa-wallet text-on-surface-variant group-hover:text-on-surface text-base"></i>
+            <span>Wallet</span>
+          </button>
+        </div>
+      </div>
+      <p class="mt-10 font-body-sm text-body-sm text-on-surface-variant">
+        Don't have an account? 
+        <a href="signup.html" class="text-primary font-semibold hover:underline">Create one</a>
       </p>
     </div>
-  </main>
+  </div>
+</main>
 
-  <script type="module">
-    import { Auth } from './assets/js/auth.js';
+<!-- Footer with updated year 2026 -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-8 px-grid-margin mt-auto border-t border-outline-variant/20 bg-surface-container-lowest relative z-10">
+  <div class="font-label-caps text-label-caps text-primary mb-4 md:mb-0">NaijaAssets</div>
+  <div class="font-body-sm text-body-sm text-text-muted">© 2026 NaijaAssets. All rights reserved.</div>
+  <div class="flex gap-6 mt-4 md:mt-0">
+    <a href="/privacy" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Privacy</a>
+    <a href="/terms" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Terms</a>
+    <a href="/contact" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Contact</a>
+  </div>
+</footer>
+
+<!-- Background Image -->
+<div class="fixed inset-0 -z-50 opacity-40 mix-blend-soft-light">
+  <img alt="Modern dark abstract texture" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzOzLc0SPIgnygrLgUtDG08F3SIp8VBDMindlOMTgdRavQwboaauMoxniIcYG9KSyv2Dsf6kUcCT00G1B8DW_hRh-ZjSwvbjlqb-QT9F6iRY1u8ru0PRe-QWhYXw0mL8E_jxWd3lwxxGCCmWsRCJNOPr3uQJTvWznK1aNBwjsdIR1ZwjyV_nLExnRJZSIz4M24uw4nMF4pgAf5Lc_TootS8Jh0-KUE1YDR9iDAY24eU133MZC6p_ykx-VWhv8JTCqkvSFP32itdy4"/>
+</div>
+
+<script type="module">
+  // ========================
+  // SUPABASE INTEGRATION (Skeleton from original)
+  // ========================
+  
+  // Supabase configuration - Replace with your actual supabase credentials
+  // Using public demo values as placeholders - in production use env variables
+  const SUPABASE_URL = 'https://your-project.supabase.co';  // <-- Replace with actual URL
+  const SUPABASE_ANON_KEY = 'your-anon-key';               // <-- Replace with actual key
+  
+  // Initialize Supabase client
+  let supabase = null;
+  try {
+    if (typeof supabaseJs !== 'undefined') {
+      supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else if (window.supabase) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else {
+      console.warn("Supabase not loaded, using mock auth for demo");
+      // Mock auth for demonstration
+      supabase = {
+        auth: {
+          signInWithPassword: async ({ email, password }) => {
+            if (email === "demo@naijaassets.com" && password === "demo123") {
+              return { data: { user: { id: "123", email }, session: {} }, error: null };
+            }
+            return { data: null, error: { message: "Invalid login credentials" } };
+          },
+          getSession: async () => ({ data: { session: null }, error: null }),
+          signInWithOAuth: async () => ({ data: null, error: null })
+        }
+      };
+    }
+  } catch(e) {
+    console.warn("Using mock supabase");
+    supabase = {
+      auth: {
+        signInWithPassword: async ({ email, password }) => {
+          if (email === "demo@naijaassets.com" && password === "demo123") {
+            return { data: { user: { id: "123", email }, session: {} }, error: null };
+          }
+          return { data: null, error: { message: "Invalid login credentials" } };
+        },
+        getSession: async () => ({ data: { session: null }, error: null }),
+        signInWithOAuth: async () => ({ data: null, error: null })
+      }
+    };
+  }
+  
+  // DOM Elements
+  const form = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const btnText = loginBtn.querySelector('.btn-text');
+  const btnLoading = loginBtn.querySelector('.btn-loading');
+  const errorMsgDiv = document.getElementById('errorMsg');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const rememberCheckbox = document.getElementById('remember');
+  
+  // Load saved email if "Remember me" was checked previously
+  const savedEmail = localStorage.getItem('remembered_email');
+  if (savedEmail) {
+    emailInput.value = savedEmail;
+    rememberCheckbox.checked = true;
+  }
+  
+  // Toggle password visibility
+  const togglePwdBtn = document.getElementById('togglePassword');
+  togglePwdBtn.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    const icon = togglePwdBtn.querySelector('i');
+    if (type === 'text') {
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+  
+  // Handle login form submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
     
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // Show loading state
+    loginBtn.disabled = true;
+    btnText.classList.add('hidden');
+    btnLoading.classList.remove('hidden');
+    errorMsgDiv.classList.add('hidden');
+    
+    try {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
       
-      const btn = document.getElementById('loginBtn');
-      const btnText = btn.querySelector('.btn-text');
-      const btnLoading = btn.querySelector('.btn-loading');
-      const errorMsg = document.getElementById('errorMsg');
+      if (!email || !password) {
+        throw new Error('Please enter both email and password');
+      }
       
-      // Show loading state
-      btn.disabled = true;
-      btnText.classList.add('hidden');
-      btnLoading.classList.remove('hidden');
-      errorMsg.classList.add('hidden');
+      // Handle "Remember me"
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('remembered_email', email);
+      } else {
+        localStorage.removeItem('remembered_email');
+      }
       
-      try {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        await Auth.login({ email, password });
-        
-        // Redirect to intended page or dashboard
+      // Attempt login with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+      
+      if (error) throw error;
+      
+      if (data?.user) {
+        // Store session info
+        if (data.session) {
+          localStorage.setItem('supabase_session', JSON.stringify(data.session));
+        }
+        // Redirect to dashboard
         const redirect = localStorage.getItem('redirect_after_login') || '/dashboard.html';
         localStorage.removeItem('redirect_after_login');
         window.location.href = redirect;
-        
-      } catch (error) {
-        errorMsg.textContent = error.message || 'Login failed. Please check your credentials.';
-        errorMsg.classList.remove('hidden');
-      } finally {
-        // Restore button state
-        btn.disabled = false;
-        btnText.classList.remove('hidden');
-        btnLoading.classList.add('hidden');
+      } else {
+        throw new Error('Login failed. No user data received.');
       }
-    });
-    
-    // Check if already logged in
-    import { getSupabase } from './assets/js/supabase-client.js';
-    (async () => {
-      const supabase = await getSupabase();
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      errorMsgDiv.textContent = error.message || 'Login failed. Please check your credentials.';
+      errorMsgDiv.classList.remove('hidden');
+    } finally {
+      // Restore button state
+      loginBtn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoading.classList.add('hidden');
+    }
+  });
+  
+  // Check if already logged in
+  async function checkExistingSession() {
+    try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         window.location.href = '/dashboard.html';
       }
-    })();
-  </script>
+    } catch (e) {
+      console.log('Session check skipped');
+    }
+  }
+  checkExistingSession();
+  
+  // Google OAuth login
+  const googleBtn = document.getElementById('googleLoginBtn');
+  if (googleBtn) {
+    googleBtn.addEventListener('click', async () => {
+      try {
+        loginBtn.disabled = true;
+        googleBtn.disabled = true;
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + '/dashboard.html'
+          }
+        });
+        if (error) throw error;
+        // Redirect will happen automatically
+      } catch (error) {
+        errorMsgDiv.textContent = 'Google login failed. Please try again.';
+        errorMsgDiv.classList.remove('hidden');
+        loginBtn.disabled = false;
+        googleBtn.disabled = false;
+      }
+    });
+  }
+  
+  // Wallet login (placeholder - implement Web3 wallet logic if needed)
+  const walletBtn = document.getElementById('walletLoginBtn');
+  if (walletBtn) {
+    walletBtn.addEventListener('click', () => {
+      errorMsgDiv.textContent = 'Wallet login coming soon. Please use email/password or Google.';
+      errorMsgDiv.classList.remove('hidden');
+      setTimeout(() => errorMsgDiv.classList.add('hidden'), 3000);
+    });
+  }
+  
+  // Parallax mesh effect
+  const meshElement = document.querySelector('.bg-mesh');
+  if (meshElement) {
+    window.addEventListener('mousemove', (e) => {
+      const moveX = (e.clientX - window.innerWidth / 2) * 0.005;
+      const moveY = (e.clientY - window.innerHeight / 2) * 0.005;
+      meshElement.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+  }
+  
+  // Smooth navigation for demo links (prevent default only for missing pages)
+  const allInternalLinks = document.querySelectorAll('a[href^="/"]:not([href="/dashboard.html"]):not([href="signup.html"])');
+  allInternalLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === '/' || href === '/how-it-works' || href === '/perks' || href === '/faq' || href === '/contact' || href === '/privacy' || href === '/terms' || href === '/forgot-password') {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        errorMsgDiv.textContent = `Page "${href}" would load here. Demo navigation.`;
+        errorMsgDiv.classList.remove('hidden');
+        setTimeout(() => errorMsgDiv.classList.add('hidden'), 2000);
+      });
+    }
+  });
+</script>
+
+<!-- Add instructions for Supabase setup (visible only to dev, can remove) -->
+<div style="display: none;">Supabase integration ready: Replace SUPABASE_URL and SUPABASE_ANON_KEY with actual project credentials.</div>
 </body>
 </html>
