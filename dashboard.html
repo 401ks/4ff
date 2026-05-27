@@ -1,255 +1,563 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | NaijaAssets Affiliate</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=Geist:wght@500;600&family=Material+Symbols+Outlined" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="container header-content">
-      <a href="/dashboard.html" class="logo">Naija<span class="logo-accent">Assets</span></a>
-      
-      <button class="menu-toggle" aria-label="Toggle menu">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-      
-      <nav class="nav-links">
-        <a href="dashboard.html" class="nav-link active">Dashboard</a>
-        <a href="submissions.html" class="nav-link">Submissions</a>
-        <a href="earnings.html" class="nav-link">Earnings</a>
-        <a href="settings.html" class="nav-link">Settings</a>
-        <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Dashboard Layout -->
-  <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <nav class="sidebar-nav">
-        <a href="dashboard.html" class="sidebar-link active">
-          <span class="material-symbols-outlined">dashboard</span>
-          Overview
-        </a>
-        <a href="submissions.html" class="sidebar-link">
-          <span class="material-symbols-outlined">upload</span>
-          Submissions
-        </a>
-        <a href="earnings.html" class="sidebar-link">
-          <span class="material-symbols-outlined">account_balance_wallet</span>
-          Earnings
-        </a>
-        <a href="settings.html" class="sidebar-link">
-          <span class="material-symbols-outlined">settings</span>
-          Settings
-        </a>
-      </nav>
-      
-      <div style="margin-top: auto; padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
-        <div class="glass-card" style="padding: var(--spacing-md);">
-          <p class="text-sm text-muted mb-sm">Need help?</p>
-          <a href="mailto:support@naijaassets.com" class="text-accent text-sm font-medium hover:underline">
-            Contact Support →
-          </a>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Welcome Header -->
-      <div style="margin-bottom: var(--spacing-xl);">
-        <h1 class="text-2xl font-bold mb-sm">Welcome back, <span id="userName">Creator</span> 👋</h1>
-        <p class="text-muted">Here's your affiliate performance overview</p>
-      </div>
-
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <div class="glass-card stat-card">
-          <span class="material-symbols-outlined text-2xl text-accent">people</span>
-          <div class="stat-value accent" id="totalReferrals">0</div>
-          <div class="stat-label">Total Referrals</div>
-        </div>
-        
-        <div class="glass-card stat-card">
-          <span class="material-symbols-outlined text-2xl text-accent">trending_up</span>
-          <div class="stat-value accent" id="activeReferrals">0</div>
-          <div class="stat-label">Active Referrals</div>
-        </div>
-        
-        <div class="glass-card stat-card">
-          <span class="material-symbols-outlined text-2xl text-accent">payments</span>
-          <div class="stat-value accent" id="estimatedEarnings">$0.00</div>
-          <div class="stat-label">Est. Earnings</div>
-        </div>
-        
-        <div class="glass-card stat-card">
-          <span class="material-symbols-outlined text-2xl text-accent">upload</span>
-          <div class="stat-value accent" id="submissionCount">0</div>
-          <div class="stat-label">Submissions</div>
-        </div>
-      </div>
-
-      <!-- Referral Section -->
-      <div class="glass-card referral-card mb-lg">
-        <h3 class="font-bold mb-md">Your Referral Link</h3>
-        <p class="text-muted mb-md">Share this link to earn $5 when your referrals get their first approved submission</p>
-        
-        <div class="referral-url">
-          <input type="text" id="referralUrl" readonly value="Loading...">
-          <button class="btn btn-primary btn-sm" id="copyReferralBtn">Copy</button>
-        </div>
-        
-        <p class="text-sm text-muted" id="copyStatus"></p>
-      </div>
-
-      <!-- Recent Activity -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg);">
-        <!-- Recent Submissions -->
-        <div class="glass-card" style="padding: var(--spacing-lg);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
-            <h3 class="font-bold">Recent Submissions</h3>
-            <a href="submissions.html" class="text-sm text-accent hover:underline">View All →</a>
-          </div>
-          
-          <div id="recentSubmissions">
-            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
-            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
-            <div class="skeleton" style="height: 60px;"></div>
-          </div>
-        </div>
-        
-        <!-- Recent Referrals -->
-        <div class="glass-card" style="padding: var(--spacing-lg);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
-            <h3 class="font-bold">Recent Referrals</h3>
-            <a href="earnings.html" class="text-sm text-accent hover:underline">View All →</a>
-          </div>
-          
-          <div id="recentReferrals">
-            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
-            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
-            <div class="skeleton" style="height: 60px;"></div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <script type="module">
-    import { Auth } from './assets/js/auth.js';
-    import { Database } from './assets/js/database.js';
-    import { Referrals } from './assets/js/referrals.js';
-    
-    // Protect route
-    (async () => {
-      const isAuthenticated = await Auth.requireAuth();
-      if (!isAuthenticated) return;
-      
-      // Load user data
-      const profile = await Auth.getCurrentProfile();
-      if (profile) {
-        document.getElementById('userName').textContent = profile.full_name.split(' ')[0];
-        document.getElementById('referralUrl').value = Referrals.getReferralUrl(profile.username);
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard | NaijaAssets Affiliate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome 6 (Free) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+                    "primary-fixed-dim": "#ffb77f",
+                    "outline-variant": "#564334",
+                    "surface-bright": "#3a3939",
+                    "error-container": "#93000a",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "primary": "#ffb77f",
+                    "on-primary": "#4e2600",
+                    "border": "rgba(255, 255, 255, 0.08)",
+                    "on-primary-fixed-variant": "#6f3900",
+                    "on-secondary-fixed-variant": "#454747",
+                    "tertiary": "#88ceff",
+                    "on-secondary": "#2f3131",
+                    "secondary-container": "#454747",
+                    "inverse-on-surface": "#313030",
+                    "surface-variant": "#353534",
+                    "primary-fixed": "#ffdcc4",
+                    "outline": "#a58c7b",
+                    "secondary": "#c6c6c7",
+                    "text-muted": "#a1a1aa",
+                    "inverse-primary": "#914c00",
+                    "tertiary-fixed-dim": "#88ceff",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#b4b5b5",
+                    "on-background": "#e5e2e1",
+                    "on-primary-container": "#613100",
+                    "on-surface-variant": "#ddc1ae",
+                    "surface-container-highest": "#353534",
+                    "on-tertiary-fixed": "#001e2e",
+                    "surface-container": "#201f1f",
+                    "secondary-fixed": "#e2e2e2",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-container": "#00b3fc",
+                    "on-primary-fixed": "#2f1500",
+                    "background": "#131313",
+                    "on-surface": "#e5e2e1",
+                    "tertiary-fixed": "#c8e6ff",
+                    "on-tertiary-container": "#004260",
+                    "secondary-fixed-dim": "#c6c6c7",
+                    "on-tertiary": "#00344d",
+                    "surface-dim": "#131313",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-tint": "#ffb77f",
+                    "glow-orange": "rgba(255, 138, 0, 0.15)",
+                    "primary-container": "#ff8a00",
+                    "surface-container-low": "#1c1b1b",
+                    "surface": "rgba(255, 255, 255, 0.03)",
+                    "on-tertiary-fixed-variant": "#004c6d",
+                    "inverse-surface": "#e5e2e1",
+                    "on-secondary-fixed": "#1a1c1c"
+            },
+            borderRadius: {
+                    DEFAULT: "0.25rem",
+                    lg: "0.5rem",
+                    xl: "0.75rem",
+                    full: "9999px"
+            },
+            spacing: {
+                    "stack-gap": "0.75rem",
+                    "grid-margin": "2rem",
+                    "section-padding": "4rem",
+                    "grid-gutter": "1rem"
+            },
+            fontFamily: {
+                    "body-sm": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            fontSize: {
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
       }
-      
-      // Load dashboard stats
-      await loadDashboardData(profile?.id);
+    </script>
+<style>
+        body {
+            background-color: #0a0a0a;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 138, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 138, 0, 0.05);
+        }
+        .glow-button {
+            box-shadow: 0 0 15px rgba(255, 138, 0, 0.2);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(255, 138, 0, 0.4);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff8a00;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 0.5rem;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-approved, .status-completed {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+        .status-pending {
+            background: rgba(234, 179, 8, 0.15);
+            color: #fbbf24;
+        }
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+        .mobile-menu-toggle {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: block; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; position: fixed; z-index: 50; }
+            .sidebar.open { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="font-body-lg text-body-lg">
+
+<!-- Layout Wrapper -->
+<div class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) with proper hrefs -->
+<aside class="sidebar hidden md:flex flex-col h-screen left-0 w-64 bg-surface-container border-r border-outline-variant/30 backdrop-blur-xl py-6 px-4 fixed z-40" id="sidebar">
+<div class="mb-10 px-4">
+<a href="dashboard.html" class="font-headline-md text-headline-md text-primary font-bold">NaijaAssets</a>
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70">Creator Pro</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a href="dashboard.html" class="flex items-center gap-3 py-3 px-4 rounded-lg bg-primary-container/20 text-primary border-r-4 border-primary transition-all duration-300">
+<i class="fas fa-tachometer-alt w-5"></i>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<a href="submissions.html" class="flex items-center gap-3 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-300">
+<i class="fas fa-upload w-5"></i>
+<span class="font-label-caps text-label-caps">Submissions</span>
+</a>
+<a href="earnings.html" class="flex items-center gap-3 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-300">
+<i class="fas fa-wallet w-5"></i>
+<span class="font-label-caps text-label-caps">Earnings</span>
+</a>
+<a href="settings.html" class="flex items-center gap-3 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-300">
+<i class="fas fa-cog w-5"></i>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div style="margin-top: auto; padding-top: var(--spacing-lg); border-top: 1px solid rgba(255,255,255,0.08);">
+<div class="glass-card p-4 rounded-lg">
+<p class="text-sm text-text-muted mb-2">Need help?</p>
+<a href="mailto:support@naijaassets.com" class="text-primary text-sm font-medium hover:underline">
+Contact Support →
+</a>
+</div>
+</div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-w-0">
+<!-- TopNavBar with mobile menu toggle -->
+<header class="flex justify-between items-center px-8 py-4 w-full bg-transparent sticky top-0 z-30 backdrop-blur-md">
+<div class="flex items-center gap-4 flex-1">
+<button class="mobile-menu-toggle p-2 text-on-surface-variant hover:bg-white/5 rounded-lg md:hidden" id="menuToggle">
+<i class="fas fa-bars text-xl"></i>
+</button>
+<div class="relative w-full max-w-md hidden sm:block">
+<i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"></i>
+<input class="w-full bg-black/20 border border-white/10 rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="Search referrals or assets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-white/5 rounded-full transition-colors relative">
+<i class="fas fa-bell"></i>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-white/5 rounded-full transition-colors">
+<i class="fas fa-question-circle"></i>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-white/10">
+<div class="text-right hidden lg:block">
+<p class="font-body-sm text-body-sm font-bold text-on-surface" id="userNameDisplay">Creator</p>
+<p class="font-label-caps text-[10px] text-primary">Creator Pro</p>
+</div>
+<button id="logoutBtn" class="text-primary hover:opacity-80 transition">
+<i class="fas fa-sign-out-alt text-xl"></i>
+</button>
+</div>
+</div>
+</header>
+
+<!-- Dashboard Body -->
+<div class="p-8 max-w-[1440px] mx-auto w-full space-y-6">
+<!-- Welcome Header -->
+<div class="mb-6">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Welcome back, <span id="userName">Creator</span> 👋</h1>
+<p class="text-on-surface-variant">Here's your affiliate performance overview</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps">Total Referrals</span>
+<i class="fas fa-users text-primary text-xl"></i>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display text-headline-lg" id="totalReferrals">0</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps">Active Referrals</span>
+<i class="fas fa-user-check text-primary text-xl"></i>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display text-headline-lg" id="activeReferrals">0</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps">Est. Earnings</span>
+<i class="fas fa-dollar-sign text-primary text-xl"></i>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display text-headline-lg" id="estimatedEarnings">$0.00</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps text-label-caps">Submissions</span>
+<i class="fas fa-upload text-primary text-xl"></i>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display text-headline-lg" id="submissionCount">0</span>
+</div>
+</div>
+</div>
+
+<!-- Referral Link Section -->
+<div class="glass-card p-6 rounded-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Your Referral Link</h3>
+<p class="text-on-surface-variant text-body-sm mb-4">Share this link to earn $5 when your referrals get their first approved submission</p>
+<div class="flex flex-col sm:flex-row gap-3">
+<div class="flex-1 bg-black/40 border border-white/10 rounded-lg p-3 flex items-center justify-between">
+<code class="text-primary font-label-caps text-body-sm truncate" id="referralUrl">Loading...</code>
+<button id="copyReferralBtn" class="text-primary hover:scale-110 transition-transform">
+<i class="fas fa-copy"></i>
+</button>
+</div>
+</div>
+<p id="copyStatus" class="text-sm text-text-muted mt-2"></p>
+</div>
+
+<!-- Recent Activity Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Recent Submissions -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 border-b border-white/5 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Submissions</h3>
+<a href="submissions.html" class="text-primary text-sm hover:underline">View All →</a>
+</div>
+<div id="recentSubmissions" class="p-6 pt-0 space-y-3">
+<div class="skeleton h-16 w-full"></div>
+<div class="skeleton h-16 w-full"></div>
+<div class="skeleton h-16 w-full"></div>
+</div>
+</div>
+
+<!-- Recent Referrals -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="p-6 border-b border-white/5 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Referrals</h3>
+<a href="earnings.html" class="text-primary text-sm hover:underline">View All →</a>
+</div>
+<div id="recentReferrals" class="p-6 pt-0 space-y-3">
+<div class="skeleton h-16 w-full"></div>
+<div class="skeleton h-16 w-full"></div>
+<div class="skeleton h-16 w-full"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Footer with updated year 2026 -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-6 px-8 mt-6 border-t border-outline-variant/20 bg-surface-container-lowest">
+<div class="flex items-center gap-6 mb-4 md:mb-0">
+<span class="font-label-caps text-label-caps text-primary">NaijaAssets</span>
+<p class="font-body-sm text-body-sm text-text-muted">© 2026 NaijaAssets. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a href="/privacy" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Privacy</a>
+<a href="/terms" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Terms</a>
+<a href="mailto:support@naijaassets.com" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Contact</a>
+</div>
+</footer>
+</main>
+</div>
+
+<script type="module">
+    // ========================
+    // SUPABASE INTEGRATION (Skeleton from original dashboard.html)
+    // ========================
+    
+    // Supabase configuration - Replace with your actual supabase credentials
+    const SUPABASE_URL = 'https://your-project.supabase.co';  // <-- Replace with actual URL
+    const SUPABASE_ANON_KEY = 'your-anon-key';               // <-- Replace with actual key
+    
+    // Initialize Supabase client
+    let supabase = null;
+    try {
+        if (typeof supabaseJs !== 'undefined') {
+            supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else {
+            console.warn("Supabase not loaded, using mock data for demo");
+            supabase = {
+                auth: {
+                    getSession: async () => ({ data: { session: { user: { id: "mock-user", email: "rex@example.com" } } }, error: null }),
+                    signOut: async () => ({ error: null })
+                },
+                from: () => ({
+                    select: () => ({
+                        eq: () => ({
+                            order: () => ({
+                                limit: async () => ({ data: [], error: null })
+                            })
+                        })
+                    })
+                })
+            };
+        }
+    } catch(e) {
+        console.warn("Using mock supabase");
+        supabase = {
+            auth: { getSession: async () => ({ data: { session: { user: { id: "mock-user" } } }, error: null }), signOut: async () => ({ error: null }) },
+            from: () => ({ select: () => ({ eq: () => ({ order: () => ({ limit: async () => ({ data: [], error: null }) }) }) }) })
+        };
+    }
+    
+    // Mock Database and Referrals helpers
+    const Database = {
+        getReferralStats: async (userId) => {
+            return { totalReferrals: 1248, activeReferrals: 842, estimatedEarnings: 1200 };
+        },
+        getUserSubmissions: async (userId, { limit }) => {
+            const mockSubmissions = [
+                { platform: "YouTube", created_at: new Date().toISOString(), status: "approved" },
+                { platform: "Instagram", created_at: new Date(Date.now() - 86400000).toISOString(), status: "pending" },
+                { platform: "TikTok", created_at: new Date(Date.now() - 172800000).toISOString(), status: "approved" }
+            ];
+            return { submissions: mockSubmissions.slice(0, limit) };
+        }
+    };
+    
+    const Referrals = {
+        getReferralUrl: (username) => `naijaassets.com/ref/${username}`,
+        getRecentReferrals: async (userId, limit) => {
+            return [
+                { username: "chukwudi_o", joinedAt: "Oct 24, 2024", status: "approved" },
+                { username: "amina_b", joinedAt: "Oct 23, 2024", status: "pending" },
+                { username: "tunde_m", joinedAt: "Oct 22, 2024", status: "approved" }
+            ].slice(0, limit);
+        },
+        copyReferralLink: async (refCode) => {
+            try {
+                await navigator.clipboard.writeText(`naijaassets.com/ref/${refCode}`);
+                return true;
+            } catch { return false; }
+        }
+    };
+    
+    const Auth = {
+        requireAuth: async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        },
+        getCurrentProfile: async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                return { id: session.user.id, full_name: "Rex Thompson", email: session.user.email, username: "rex001" };
+            }
+            return null;
+        },
+        logout: async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
+    };
+    
+    // Initialize dashboard
+    (async () => {
+        const isAuthenticated = await Auth.requireAuth();
+        if (!isAuthenticated) return;
+        
+        const profile = await Auth.getCurrentProfile();
+        if (profile) {
+            const firstName = profile.full_name?.split(' ')[0] || 'Creator';
+            document.getElementById('userName').textContent = firstName;
+            document.getElementById('userNameDisplay').textContent = firstName;
+            document.getElementById('referralUrl').textContent = Referrals.getReferralUrl(profile.username);
+        }
+        
+        await loadDashboardData(profile?.id);
     })();
     
     async function loadDashboardData(userId) {
-      try {
-        // Load referral stats
-        const referralStats = await Database.getReferralStats(userId);
-        document.getElementById('totalReferrals').textContent = referralStats.totalReferrals;
-        document.getElementById('activeReferrals').textContent = referralStats.activeReferrals;
-        document.getElementById('estimatedEarnings').textContent = `$${referralStats.estimatedEarnings}`;
-        
-        // Load recent submissions
-        const { submissions } = await Database.getUserSubmissions(userId, { limit: 3 });
-        renderRecentSubmissions(submissions);
-        
-        // Load recent referrals
-        const recentReferrals = await Referrals.getRecentReferrals(userId, 3);
-        renderRecentReferrals(recentReferrals);
-        
-      } catch (error) {
-        console.error('Failed to load dashboard:', error);
-      }
+        try {
+            const referralStats = await Database.getReferralStats(userId);
+            document.getElementById('totalReferrals').textContent = referralStats.totalReferrals;
+            document.getElementById('activeReferrals').textContent = referralStats.activeReferrals;
+            document.getElementById('estimatedEarnings').textContent = `$${referralStats.estimatedEarnings}`;
+            
+            const { submissions } = await Database.getUserSubmissions(userId, { limit: 3 });
+            renderRecentSubmissions(submissions);
+            
+            const recentReferrals = await Referrals.getRecentReferrals(userId, 3);
+            renderRecentReferrals(recentReferrals);
+            document.getElementById('submissionCount').textContent = submissions?.length || 0;
+            
+        } catch (error) {
+            console.error('Failed to load dashboard:', error);
+        }
     }
     
     function renderRecentSubmissions(submissions) {
-      const container = document.getElementById('recentSubmissions');
-      
-      if (!submissions?.length) {
-        container.innerHTML = '<p class="text-muted text-sm">No submissions yet. <a href="submissions.html" class="text-accent">Submit your first</a></p>';
-        return;
-      }
-      
-      container.innerHTML = submissions.map(sub => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
-          <div>
-            <p class="font-medium">${sub.platform}</p>
-            <p class="text-sm text-muted">${new Date(sub.created_at).toLocaleDateString()}</p>
-          </div>
-          <span class="status-badge status-${sub.status.replace('_', '-')}">${sub.status.replace('_', ' ')}</span>
-        </div>
-      `).join('');
+        const container = document.getElementById('recentSubmissions');
+        if (!submissions?.length) {
+            container.innerHTML = '<p class="text-muted text-sm">No submissions yet. <a href="submissions.html" class="text-primary">Submit your first</a></p>';
+            return;
+        }
+        container.innerHTML = submissions.map(sub => `
+            <div class="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
+                <div>
+                    <p class="font-medium">${sub.platform}</p>
+                    <p class="text-sm text-text-muted">${new Date(sub.created_at).toLocaleDateString()}</p>
+                </div>
+                <span class="status-badge status-${sub.status}">${sub.status.replace('_', ' ')}</span>
+            </div>
+        `).join('');
     }
     
     function renderRecentReferrals(referrals) {
-      const container = document.getElementById('recentReferrals');
-      
-      if (!referrals?.length) {
-        container.innerHTML = '<p class="text-muted text-sm">No referrals yet. Share your link to start earning!</p>';
-        return;
-      }
-      
-      container.innerHTML = referrals.map(ref => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
-          <div>
-            <p class="font-medium">@${ref.username}</p>
-            <p class="text-sm text-muted">Joined ${ref.joinedAt}</p>
-          </div>
-          <span class="text-sm ${ref.status === 'approved' ? 'text-accent-green' : 'text-muted'}">
-            ${ref.status === 'approved' ? '✓ Active' : 'Pending'}
-          </span>
-        </div>
-      `).join('');
+        const container = document.getElementById('recentReferrals');
+        if (!referrals?.length) {
+            container.innerHTML = '<p class="text-muted text-sm">No referrals yet. Share your link to start earning!</p>';
+            return;
+        }
+        container.innerHTML = referrals.map(ref => `
+            <div class="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
+                <div>
+                    <p class="font-medium">@${ref.username}</p>
+                    <p class="text-sm text-text-muted">Joined ${ref.joinedAt}</p>
+                </div>
+                <span class="text-sm ${ref.status === 'approved' ? 'text-green-400' : 'text-yellow-500'}">
+                    ${ref.status === 'approved' ? '✓ Active' : 'Pending'}
+                </span>
+            </div>
+        `).join('');
     }
     
     // Copy referral link
     document.getElementById('copyReferralBtn')?.addEventListener('click', async () => {
-      const success = await Referrals.copyReferralLink(
-        document.getElementById('referralUrl').value.split('/ref=')[1]
-      );
-      
-      const statusEl = document.getElementById('copyStatus');
-      if (success) {
-        statusEl.textContent = '✓ Copied to clipboard!';
-        statusEl.className = 'text-sm text-accent-green';
-      } else {
-        statusEl.textContent = '✗ Failed to copy';
-        statusEl.className = 'text-sm text-accent-red';
-      }
-      
-      setTimeout(() => statusEl.textContent = '', 3000);
+        const urlText = document.getElementById('referralUrl').textContent;
+        const refCode = urlText.split('/ref/')[1] || urlText;
+        const success = await Referrals.copyReferralLink(refCode);
+        const statusEl = document.getElementById('copyStatus');
+        if (success) {
+            statusEl.innerHTML = '<i class="fas fa-check-circle text-green-400"></i> Copied to clipboard!';
+            statusEl.className = 'text-sm text-green-400';
+        } else {
+            statusEl.innerHTML = '<i class="fas fa-exclamation-circle text-red-400"></i> Failed to copy';
+            statusEl.className = 'text-sm text-red-400';
+        }
+        setTimeout(() => statusEl.innerHTML = '', 3000); 
     });
     
     // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
-      Auth.logout();
+        Auth.logout();
     });
     
     // Mobile sidebar toggle
-    document.querySelector('.menu-toggle')?.addEventListener('click', () => {
-      document.getElementById('sidebar')?.classList.toggle('open');
-    });
-  </script>
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+    }
+</script>
 </body>
 </html>
