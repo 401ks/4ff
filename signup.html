@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | NaijaAssets Affiliate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=Geist:wght@500;600&family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <a href="/" class="logo">Naija<span class="logo-accent">Assets</span></a>
+      <nav class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 144px); padding: var(--spacing-xl) 0;">
+    <div class="glass-card" style="width: 100%; max-width: 520px; padding: var(--spacing-xl);">
+      <div class="text-center mb-lg">
+        <h1 class="text-2xl font-bold mb-sm">Create Your Account</h1>
+        <p class="text-muted">Join the NaijaAssets affiliate program in 60 seconds</p>
+      </div>
+      
+      <form id="signupForm" class="space-y-lg">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name</label>
+            <input type="text" id="fullName" class="glass-input" placeholder="John Doe" required autocomplete="name">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="glass-input" placeholder="johndoe" required pattern="[a-zA-Z0-9_]{3,20}" autocomplete="username">
+            <p class="form-hint">3-20 characters, letters/numbers/underscores</p>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="glass-input" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="glass-input" placeholder="••••••••" required minlength="8" autocomplete="new-password">
+          <p class="form-hint">Minimum 8 characters</p>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="agreeTerms" required>
+            <span class="checkbox-label">
+              I agree to the <a href="terms.html" target="_blank">Terms & Conditions</a> and <a href="guidelines.html" target="_blank">Creator Policies</a>
+            </span>
+          </label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-block" id="signupBtn">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-loading hidden">
+            <span class="material-symbols-outlined animate-spin">progress_activity</span>
+          </span>
+        </button>
+        
+        <p id="errorMsg" class="form-error hidden"></p>
+      </form>
+      
+      <p class="text-center text-muted mt-lg">
+        Already have an account? <a href="login.html" class="text-accent hover:underline">Sign in</a>
+      </p>
+    </div>
+  </main>
+
+  <script type="module">
+    import { Auth } from './assets/js/auth.js';
+    import { Referrals } from './assets/js/referrals.js';
+    
+    // Capture referral code from URL
+    Auth.captureReferralCode();
+    
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('signupBtn');
+      const btnText = btn.querySelector('.btn-text');
+      const btnLoading = btn.querySelector('.btn-loading');
+      const errorMsg = document.getElementById('errorMsg');
+      
+      // Show loading state
+      btn.disabled = true;
+      btnText.classList.add('hidden');
+      btnLoading.classList.remove('hidden');
+      errorMsg.classList.add('hidden');
+      
+      try {
+        const formData = {
+          fullName: document.getElementById('fullName').value.trim(),
+          username: document.getElementById('username').value.trim().toLowerCase(),
+          email: document.getElementById('email').value.trim().toLowerCase(),
+          password: document.getElementById('password').value,
+          agreedToTerms: document.getElementById('agreeTerms').checked
+        };
+        
+        await Auth.signup(formData);
+        
+        // Redirect to dashboard (email confirmation may be required)
+        window.location.href = '/dashboard.html?welcome=true';
+        
+      } catch (error) {
+        errorMsg.textContent = error.message || 'Signup failed. Please try again.';
+        errorMsg.classList.remove('hidden');
+      } finally {
+        // Restore button state
+        btn.disabled = false;
+        btnText.classList.remove('hidden');
+        btnLoading.classList.add('hidden');
+      }
+    });
+    
+    // Real-time username validation
+    document.getElementById('username').addEventListener('blur', async (e) => {
+      const username = e.target.value.trim();
+      if (username.length >= 3) {
+        // Could add API call to check availability here
+        // For now, validation happens on submit
+      }
+    });
+  </script>
+</body>
+</html>

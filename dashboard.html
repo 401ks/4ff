@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | NaijaAssets Affiliate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=Geist:wght@500;600&family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-content">
+      <a href="/dashboard.html" class="logo">Naija<span class="logo-accent">Assets</span></a>
+      
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      
+      <nav class="nav-links">
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="submissions.html" class="nav-link">Submissions</a>
+        <a href="earnings.html" class="nav-link">Earnings</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Dashboard Layout -->
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link active">
+          <span class="material-symbols-outlined">dashboard</span>
+          Overview
+        </a>
+        <a href="submissions.html" class="sidebar-link">
+          <span class="material-symbols-outlined">upload</span>
+          Submissions
+        </a>
+        <a href="earnings.html" class="sidebar-link">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          Earnings
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <span class="material-symbols-outlined">settings</span>
+          Settings
+        </a>
+      </nav>
+      
+      <div style="margin-top: auto; padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+        <div class="glass-card" style="padding: var(--spacing-md);">
+          <p class="text-sm text-muted mb-sm">Need help?</p>
+          <a href="mailto:support@naijaassets.com" class="text-accent text-sm font-medium hover:underline">
+            Contact Support →
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Welcome Header -->
+      <div style="margin-bottom: var(--spacing-xl);">
+        <h1 class="text-2xl font-bold mb-sm">Welcome back, <span id="userName">Creator</span> 👋</h1>
+        <p class="text-muted">Here's your affiliate performance overview</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="glass-card stat-card">
+          <span class="material-symbols-outlined text-2xl text-accent">people</span>
+          <div class="stat-value accent" id="totalReferrals">0</div>
+          <div class="stat-label">Total Referrals</div>
+        </div>
+        
+        <div class="glass-card stat-card">
+          <span class="material-symbols-outlined text-2xl text-accent">trending_up</span>
+          <div class="stat-value accent" id="activeReferrals">0</div>
+          <div class="stat-label">Active Referrals</div>
+        </div>
+        
+        <div class="glass-card stat-card">
+          <span class="material-symbols-outlined text-2xl text-accent">payments</span>
+          <div class="stat-value accent" id="estimatedEarnings">$0.00</div>
+          <div class="stat-label">Est. Earnings</div>
+        </div>
+        
+        <div class="glass-card stat-card">
+          <span class="material-symbols-outlined text-2xl text-accent">upload</span>
+          <div class="stat-value accent" id="submissionCount">0</div>
+          <div class="stat-label">Submissions</div>
+        </div>
+      </div>
+
+      <!-- Referral Section -->
+      <div class="glass-card referral-card mb-lg">
+        <h3 class="font-bold mb-md">Your Referral Link</h3>
+        <p class="text-muted mb-md">Share this link to earn $5 when your referrals get their first approved submission</p>
+        
+        <div class="referral-url">
+          <input type="text" id="referralUrl" readonly value="Loading...">
+          <button class="btn btn-primary btn-sm" id="copyReferralBtn">Copy</button>
+        </div>
+        
+        <p class="text-sm text-muted" id="copyStatus"></p>
+      </div>
+
+      <!-- Recent Activity -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg);">
+        <!-- Recent Submissions -->
+        <div class="glass-card" style="padding: var(--spacing-lg);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+            <h3 class="font-bold">Recent Submissions</h3>
+            <a href="submissions.html" class="text-sm text-accent hover:underline">View All →</a>
+          </div>
+          
+          <div id="recentSubmissions">
+            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
+            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
+            <div class="skeleton" style="height: 60px;"></div>
+          </div>
+        </div>
+        
+        <!-- Recent Referrals -->
+        <div class="glass-card" style="padding: var(--spacing-lg);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+            <h3 class="font-bold">Recent Referrals</h3>
+            <a href="earnings.html" class="text-sm text-accent hover:underline">View All →</a>
+          </div>
+          
+          <div id="recentReferrals">
+            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
+            <div class="skeleton" style="height: 60px; margin-bottom: var(--spacing-sm);"></div>
+            <div class="skeleton" style="height: 60px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { Auth } from './assets/js/auth.js';
+    import { Database } from './assets/js/database.js';
+    import { Referrals } from './assets/js/referrals.js';
+    
+    // Protect route
+    (async () => {
+      const isAuthenticated = await Auth.requireAuth();
+      if (!isAuthenticated) return;
+      
+      // Load user data
+      const profile = await Auth.getCurrentProfile();
+      if (profile) {
+        document.getElementById('userName').textContent = profile.full_name.split(' ')[0];
+        document.getElementById('referralUrl').value = Referrals.getReferralUrl(profile.username);
+      }
+      
+      // Load dashboard stats
+      await loadDashboardData(profile?.id);
+    })();
+    
+    async function loadDashboardData(userId) {
+      try {
+        // Load referral stats
+        const referralStats = await Database.getReferralStats(userId);
+        document.getElementById('totalReferrals').textContent = referralStats.totalReferrals;
+        document.getElementById('activeReferrals').textContent = referralStats.activeReferrals;
+        document.getElementById('estimatedEarnings').textContent = `$${referralStats.estimatedEarnings}`;
+        
+        // Load recent submissions
+        const { submissions } = await Database.getUserSubmissions(userId, { limit: 3 });
+        renderRecentSubmissions(submissions);
+        
+        // Load recent referrals
+        const recentReferrals = await Referrals.getRecentReferrals(userId, 3);
+        renderRecentReferrals(recentReferrals);
+        
+      } catch (error) {
+        console.error('Failed to load dashboard:', error);
+      }
+    }
+    
+    function renderRecentSubmissions(submissions) {
+      const container = document.getElementById('recentSubmissions');
+      
+      if (!submissions?.length) {
+        container.innerHTML = '<p class="text-muted text-sm">No submissions yet. <a href="submissions.html" class="text-accent">Submit your first</a></p>';
+        return;
+      }
+      
+      container.innerHTML = submissions.map(sub => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+          <div>
+            <p class="font-medium">${sub.platform}</p>
+            <p class="text-sm text-muted">${new Date(sub.created_at).toLocaleDateString()}</p>
+          </div>
+          <span class="status-badge status-${sub.status.replace('_', '-')}">${sub.status.replace('_', ' ')}</span>
+        </div>
+      `).join('');
+    }
+    
+    function renderRecentReferrals(referrals) {
+      const container = document.getElementById('recentReferrals');
+      
+      if (!referrals?.length) {
+        container.innerHTML = '<p class="text-muted text-sm">No referrals yet. Share your link to start earning!</p>';
+        return;
+      }
+      
+      container.innerHTML = referrals.map(ref => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+          <div>
+            <p class="font-medium">@${ref.username}</p>
+            <p class="text-sm text-muted">Joined ${ref.joinedAt}</p>
+          </div>
+          <span class="text-sm ${ref.status === 'approved' ? 'text-accent-green' : 'text-muted'}">
+            ${ref.status === 'approved' ? '✓ Active' : 'Pending'}
+          </span>
+        </div>
+      `).join('');
+    }
+    
+    // Copy referral link
+    document.getElementById('copyReferralBtn')?.addEventListener('click', async () => {
+      const success = await Referrals.copyReferralLink(
+        document.getElementById('referralUrl').value.split('/ref=')[1]
+      );
+      
+      const statusEl = document.getElementById('copyStatus');
+      if (success) {
+        statusEl.textContent = '✓ Copied to clipboard!';
+        statusEl.className = 'text-sm text-accent-green';
+      } else {
+        statusEl.textContent = '✗ Failed to copy';
+        statusEl.className = 'text-sm text-accent-red';
+      }
+      
+      setTimeout(() => statusEl.textContent = '', 3000);
+    });
+    
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      Auth.logout();
+    });
+    
+    // Mobile sidebar toggle
+    document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
