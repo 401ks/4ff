@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Earnings | NaijaAssets Affiliate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome 6 (Free) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+                    "primary-fixed-dim": "#ffb77f",
+                    "outline-variant": "#564334",
+                    "surface-bright": "#3a3939",
+                    "error-container": "#93000a",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "primary": "#ffb77f",
+                    "on-primary": "#4e2600",
+                    "border": "rgba(255, 255, 255, 0.08)",
+                    "on-primary-fixed-variant": "#6f3900",
+                    "on-secondary-fixed-variant": "#454747",
+                    "tertiary": "#88ceff",
+                    "on-secondary": "#2f3131",
+                    "secondary-container": "#454747",
+                    "inverse-on-surface": "#313030",
+                    "surface-variant": "#353534",
+                    "primary-fixed": "#ffdcc4",
+                    "outline": "#a58c7b",
+                    "secondary": "#c6c6c7",
+                    "text-muted": "#a1a1aa",
+                    "inverse-primary": "#914c00",
+                    "tertiary-fixed-dim": "#88ceff",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#b4b5b5",
+                    "on-background": "#e5e2e1",
+                    "on-primary-container": "#613100",
+                    "on-surface-variant": "#ddc1ae",
+                    "surface-container-highest": "#353534",
+                    "on-tertiary-fixed": "#001e2e",
+                    "surface-container": "#201f1f",
+                    "secondary-fixed": "#e2e2e2",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-container": "#00b3fc",
+                    "on-primary-fixed": "#2f1500",
+                    "background": "#131313",
+                    "on-surface": "#e5e2e1",
+                    "tertiary-fixed": "#c8e6ff",
+                    "on-tertiary-container": "#004260",
+                    "secondary-fixed-dim": "#c6c6c7",
+                    "on-tertiary": "#00344d",
+                    "surface-dim": "#131313",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-tint": "#ffb77f",
+                    "glow-orange": "rgba(255, 138, 0, 0.15)",
+                    "primary-container": "#ff8a00",
+                    "surface-container-low": "#1c1b1b",
+                    "surface": "rgba(255, 255, 255, 0.03)",
+                    "on-tertiary-fixed-variant": "#004c6d",
+                    "inverse-surface": "#e5e2e1",
+                    "on-secondary-fixed": "#1a1c1c"
+            },
+            borderRadius: {
+                    DEFAULT: "0.25rem",
+                    lg: "0.5rem",
+                    xl: "0.75rem",
+                    full: "9999px"
+            },
+            fontFamily: {
+                    "body-sm": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0a0a0a; color: #e5e2e1; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(255, 138, 0, 0.2); box-shadow: 0 0 20px rgba(255, 138, 0, 0.05); }
+        .progress-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 9999px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #ff8a00; border-radius: 9999px; transition: width 0.3s ease; }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+        .status-approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .status-pending { background: rgba(234, 179, 8, 0.15); color: #fbbf24; }
+        button:active { transform: scale(0.98); }
+        .mobile-menu-toggle { display: none; }
+        @media (max-width: 768px) { .mobile-menu-toggle { display: block; } .sidebar { transform: translateX(-100%); transition: transform 0.3s; position: fixed; z-index: 100; background: #1a1a1a; } .sidebar.open { transform: translateX(0); } }
+        .earnings-hero { background: linear-gradient(135deg, rgba(255, 138, 0, 0.12), rgba(255, 138, 0, 0.03)); border: 1px solid rgba(255, 138, 0, 0.3); }
+        .empty-earnings { text-align: center; padding: 3rem 1rem; color: #a1a1aa; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+<!-- SideNavBar with Font Awesome and proper hrefs -->
+<aside class="sidebar hidden md:flex flex-col h-screen left-0 w-64 bg-surface-container border-r border-outline-variant/30 backdrop-blur-xl py-6 px-4 fixed z-50" id="sidebar">
+<div class="mb-10 px-2"><a href="dashboard.html" class="font-headline-md text-headline-md text-primary font-bold">NaijaAssets</a><p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">Creator Pro</p></div>
+<nav class="flex-1 space-y-2">
+<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-all rounded-lg font-label-caps text-label-caps"><i class="fas fa-tachometer-alt w-5"></i> Dashboard</a>
+<a href="referrals.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-all rounded-lg font-label-caps text-label-caps"><i class="fas fa-users w-5"></i> Referrals</a>
+<a href="submissions.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-all rounded-lg font-label-caps text-label-caps"><i class="fas fa-upload w-5"></i> Submissions</a>
+<a href="earnings.html" class="flex items-center gap-3 px-4 py-3 bg-primary-container/20 text-primary border-r-4 border-primary transition-all font-label-caps text-label-caps"><i class="fas fa-dollar-sign w-5"></i> Earnings</a>
+<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-all rounded-lg font-label-caps text-label-caps"><i class="fas fa-cog w-5"></i> Settings</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/20"><div class="glass-card p-3 rounded-lg"><p class="text-xs text-text-muted mb-1">Need help?</p><a href="mailto:support@naijaassets.com" class="text-primary text-xs font-medium hover:underline"><i class="fas fa-envelope mr-1"></i> Contact Support →</a></div></div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-4 w-full bg-transparent sticky top-0 z-40">
+<div class="flex items-center gap-4 flex-1">
+<button class="mobile-menu-toggle p-2 text-on-surface-variant hover:bg-white/5 rounded-lg md:hidden" id="menuToggle"><i class="fas fa-bars text-xl"></i></button>
+<div class="relative w-full max-w-md"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"></i><input class="w-full bg-black/20 border border-white/10 rounded-full py-2 pl-10 pr-4 text-body-sm font-body-sm focus:outline-none focus:border-primary/50" placeholder="Search earnings..." type="text" id="searchInput"/></div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:bg-white/5 p-2 rounded-full transition-colors"><i class="fas fa-bell"></i></button>
+<button class="text-on-surface-variant hover:bg-white/5 p-2 rounded-full transition-colors"><i class="fas fa-question-circle"></i></button>
+<div class="flex items-center gap-3 ml-2 border-l border-white/10 pl-6"><div class="text-right hidden sm:block"><p class="font-body-sm text-body-sm text-on-surface font-semibold" id="userName">Alex Okoro</p><p class="text-[10px] uppercase tracking-widest text-primary">Creator Pro</p></div><button id="logoutBtn" class="text-primary hover:opacity-80 transition"><i class="fas fa-sign-out-alt text-xl"></i></button></div>
+</div>
+</header>
+
+<div class="px-8 py-6 space-y-8">
+<!-- Page Header -->
+<div><h1 class="text-2xl font-bold mb-1">Your Earnings</h1><p class="text-muted">Track commissions from submissions and referral bonuses</p></div>
+
+<!-- Earnings Hero Card -->
+<div class="glass-card earnings-hero rounded-2xl p-8 text-center">
+<p class="text-muted text-sm">Total Lifetime Earnings</p>
+<div class="text-5xl font-extrabold text-primary my-4" id="totalEarnings">$0.00</div>
+<p class="text-sm text-muted" id="nextPayoutInfo">Reach $50.00 to request your first payout</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+<div class="text-center p-3 bg-white/5 rounded-xl"><div class="text-xl font-bold text-primary" id="approvedEarnings">$0.00</div><div class="text-xs text-muted">Approved</div></div>
+<div class="text-center p-3 bg-white/5 rounded-xl"><div class="text-xl font-bold text-yellow-400" id="pendingEarnings">$0.00</div><div class="text-xs text-muted">Pending</div></div>
+<div class="text-center p-3 bg-white/5 rounded-xl"><div class="text-xl font-bold text-green-400" id="referralEarnings">$0.00</div><div class="text-xs text-muted">Referrals</div></div>
+<div class="text-center p-3 bg-white/5 rounded-xl"><div class="text-xl font-bold text-blue-400" id="paidOut">$0.00</div><div class="text-xs text-muted">Paid Out</div></div>
+</div>
+</div>
+
+<!-- Payout Progress -->
+<div class="glass-card rounded-2xl p-6">
+<div class="flex justify-between items-center mb-4"><h3 class="font-bold">Payout Progress</h3><span class="text-sm text-muted" id="payoutThreshold">$0.00 / $50.00</span></div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+<div class="flex justify-between items-center mt-3"><span id="progressText" class="text-xs text-muted">0% to payout threshold</span><button id="requestPayoutBtn" class="px-4 py-2 bg-primary/20 text-primary rounded-lg text-sm font-medium hover:bg-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all" disabled>Request Payout</button></div>
+<p class="text-xs text-muted mt-4">Payouts processed weekly via Bank Transfer, PayPal, or Crypto. Minimum $50.</p>
+</div>
+
+<!-- Payout Methods -->
+<div class="glass-card rounded-2xl p-6"><h3 class="font-bold mb-4">Payout Methods</h3><div id="payoutMethods" class="space-y-3"></div><p class="text-sm text-muted mt-4">Configure your payout preferences in <a href="settings.html" class="text-primary hover:underline">Settings</a></p></div>
+
+<!-- Earnings History -->
+<div class="glass-card rounded-2xl overflow-hidden"><div class="p-6 border-b border-white/10 flex justify-between items-center"><h3 class="font-bold">Earnings History</h3><select id="filterType" class="bg-black/40 border border-white/10 rounded-lg px-3 py-1.5 text-sm"><option value="all">All Types</option><option value="submission">Submissions</option><option value="referral">Referrals</option></select></div>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-white/5 text-xs text-muted uppercase tracking-wider"><th class="px-6 py-3">Date</th><th class="px-6 py-3">Source</th><th class="px-6 py-3 hide-mobile">Details</th><th class="px-6 py-3">Type</th><th class="px-6 py-3">Amount</th><th class="px-6 py-3">Status</th></tr></thead><tbody id="earningsTableBody"></tbody></table></div>
+<div id="emptyEarnings" class="empty-earnings hidden"><i class="fas fa-wallet text-4xl mb-3 opacity-50"></i><p class="font-medium">No earnings yet</p><p class="text-sm">Submit content or share your referral link to start earning</p><a href="submissions.html" class="inline-block mt-4 px-4 py-2 bg-primary text-black rounded-lg text-sm font-medium">Submit Content</a></div></div>
+
+<!-- Referral Earnings Tip -->
+<div class="glass-card rounded-2xl p-4 flex gap-3 items-start border-l-4 border-green-500"><i class="fas fa-lightbulb text-yellow-400 text-xl"></i><div><p class="font-medium text-sm">💡 Maximize Your Earnings</p><p class="text-xs text-muted mt-1">Earn an extra <strong>$5 bonus</strong> for each referral who gets their first approved submission. Share your referral link from the Dashboard to grow your income passively.</p></div></div>
+</div>
+
+<!-- Footer with updated year 2026 -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-6 px-8 mt-auto border-t border-outline-variant/20 bg-surface-container-lowest"><div class="mb-4 md:mb-0"><span class="font-label-caps text-label-caps text-primary">NaijaAssets</span><span class="ml-4 font-body-sm text-body-sm text-text-muted">© 2026 NaijaAssets. All rights reserved.</span></div><div class="flex gap-8"><a href="/privacy" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Privacy</a><a href="/terms" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Terms</a><a href="mailto:support@naijaassets.com" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Contact</a></div></footer>
+</main>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-high border-t border-white/5 flex items-center justify-around px-2 z-50">
+<a href="dashboard.html" class="flex flex-col items-center gap-1 text-on-surface-variant"><i class="fas fa-tachometer-alt text-xl"></i><span class="text-[10px]">Home</span></a>
+<a href="submissions.html" class="flex flex-col items-center gap-1 text-on-surface-variant"><i class="fas fa-upload text-xl"></i><span class="text-[10px]">Submit</span></a>
+<a href="earnings.html" class="flex flex-col items-center gap-1 text-primary"><i class="fas fa-dollar-sign text-xl"></i><span class="text-[10px]">Earnings</span></a>
+<a href="settings.html" class="flex flex-col items-center gap-1 text-on-surface-variant"><i class="fas fa-cog text-xl"></i><span class="text-[10px]">Settings</span></a>
+</nav>
+
+<script type="module">
+    // Supabase configuration - Replace with actual credentials
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_ANON_KEY = 'your-anon-key';
+    
+    let supabase = null;
+    try {
+        if (typeof supabaseJs !== 'undefined') supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        else if (window.supabase) supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        else { supabase = { auth: { getSession: async () => ({ data: { session: { user: { id: "mock-user", email: "alex@example.com" } } }, error: null }), signOut: async () => ({ error: null }) }, from: () => ({ select: () => ({ eq: () => ({ order: () => ({ range: async () => ({ data: [], error: null, count: 0 }) }) }) }) }) }; }
+    } catch(e) { supabase = { auth: { getSession: async () => ({ data: { session: { user: { id: "mock-user" } } }, error: null }), signOut: async () => ({ error: null }) }, from: () => ({ select: () => ({ eq: () => ({ order: () => ({ range: async () => ({ data: [], error: null, count: 0 }) }) }) }) }) }; }
+    
+    const Auth = {
+        requireAuth: async () => { const { data: { session } } = await supabase.auth.getSession(); if (!session?.user) { window.location.href = 'login.html'; return false; } return true; },
+        getCurrentProfile: async () => { const { data: { session } } = await supabase.auth.getSession(); if (session?.user) return { id: session.user.id, full_name: "Alex Okoro", payout_method: "bank_transfer" }; return null; },
+        logout: async () => { await supabase.auth.signOut(); window.location.href = 'login.html'; }
+    };
+    
+    const CONFIG = { app: { payoutThreshold: 50, referralEarnings: { firstSubmission: 5 } } };
+    
+    // Mock Database helpers
+    const Database = {
+        getEarningsSummary: async (userId) => ({ total: 4250, approved: 3750, pending: 125.40, referral: 374.60 }),
+        getUserSubmissions: async (userId, { limit }) => {
+            const submissions = [
+                { id: "1", platform: "youtube", content_url: "https://youtube.com/watch?v=abc", status: "approved", payout_actual: 125, payout_estimate: 125, created_at: "2024-11-15", reviewed_at: "2024-11-16" },
+                { id: "2", platform: "tiktok", content_url: "https://tiktok.com/@user/video/123", status: "pending_review", payout_estimate: 85, created_at: "2024-11-20" },
+                { id: "3", platform: "instagram", content_url: "https://instagram.com/p/xyz", status: "approved", payout_actual: 210, created_at: "2024-11-10", reviewed_at: "2024-11-12" }
+            ];
+            return { submissions: submissions.slice(0, limit) };
+        },
+        getReferralStats: async (userId) => ({ activeReferrals: 12, totalReferrals: 25 })
+    };
+    
+    let currentUser = null;
+    
+    (async () => {
+        const isAuthenticated = await Auth.requireAuth();
+        if (!isAuthenticated) return;
+        currentUser = await Auth.getCurrentProfile();
+        if (currentUser) document.getElementById('userName').textContent = currentUser.full_name?.split(' ')[0] || 'Alex';
+        await loadEarningsData();
+    })();
+    
+    async function loadEarningsData() {
+        try {
+            const summary = await Database.getEarningsSummary(currentUser?.id);
+            document.getElementById('totalEarnings').textContent = `$${summary.total.toFixed(2)}`;
+            document.getElementById('approvedEarnings').textContent = `$${summary.approved.toFixed(2)}`;
+            document.getElementById('pendingEarnings').textContent = `$${summary.pending.toFixed(2)}`;
+            document.getElementById('referralEarnings').textContent = `$${summary.referral.toFixed(2)}`;
+            document.getElementById('paidOut').textContent = `$${(summary.total - summary.pending).toFixed(2)}`;
+            
+            const availableForPayout = summary.approved;
+            const threshold = CONFIG.app.payoutThreshold;
+            const percentage = Math.min((availableForPayout / threshold) * 100, 100);
+            document.getElementById('payoutThreshold').textContent = `$${availableForPayout.toFixed(2)} / $${threshold}.00`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${Math.round(percentage)}% to payout threshold`;
+            const payoutBtn = document.getElementById('requestPayoutBtn');
+            if (availableForPayout >= threshold) { payoutBtn.disabled = false; payoutBtn.innerHTML = '<i class="fas fa-money-bill-wave mr-1"></i> Request Payout'; document.getElementById('nextPayoutInfo').innerHTML = '✓ Ready for payout!'; }
+            else { payoutBtn.disabled = true; payoutBtn.innerHTML = `$${(threshold - availableForPayout).toFixed(2)} more needed`; document.getElementById('nextPayoutInfo').innerHTML = `Reach $${threshold}.00 to request your first payout`; }
+            
+            renderPayoutMethods(currentUser);
+            await loadEarningsHistory();
+        } catch (error) { console.error('Failed to load earnings:', error); }
+    }
+    
+    function renderPayoutMethods(profile) {
+        const container = document.getElementById('payoutMethods');
+        const methods = [
+            { id: 'bank_transfer', name: 'Bank Transfer', icon: 'fa-university', desc: 'Nigerian banks supported' },
+            { id: 'paypal', name: 'PayPal', icon: 'fa-paypal', desc: 'Instant transfer' },
+            { id: 'crypto', name: 'Crypto (USDT)', icon: 'fa-coins', desc: 'USDT on TRC20' }
+        ];
+        const selected = profile?.payout_method || 'bank_transfer';
+        container.innerHTML = methods.map(m => `<div class="flex items-center justify-between p-3 border-b border-white/10 last:border-0"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center"><i class="fab ${m.icon} text-primary text-lg"></i></div><div><p class="font-medium text-sm">${m.name}</p><p class="text-xs text-muted">${m.desc}</p></div></div><span class="text-xs px-2 py-1 rounded-full ${selected === m.id ? 'bg-green-500/20 text-green-400' : 'bg-white/10 text-muted'}">${selected === m.id ? 'Selected' : 'Available'}</span></div>`).join('');
+    }
+    
+    async function loadEarningsHistory() {
+        try {
+            const { submissions } = await Database.getUserSubmissions(currentUser?.id, { limit: 20 });
+            const referralStats = await Database.getReferralStats(currentUser?.id);
+            const earnings = [];
+            submissions?.forEach(sub => {
+                if (sub.status === 'approved' && sub.payout_actual) earnings.push({ date: sub.reviewed_at || sub.created_at, source: sub.platform, details: sub.content_url?.substring(0, 40), type: 'submission', amount: parseFloat(sub.payout_actual), status: 'approved' });
+                else if (sub.status === 'pending_review') earnings.push({ date: sub.created_at, source: sub.platform, details: sub.content_url?.substring(0, 40), type: 'submission', amount: parseFloat(sub.payout_estimate), status: 'pending' });
+            });
+            if (referralStats.activeReferrals > 0) earnings.push({ date: new Date().toISOString(), source: `${referralStats.activeReferrals} active referrals`, details: 'First approved submission bonus', type: 'referral', amount: referralStats.activeReferrals * CONFIG.app.referralEarnings.firstSubmission, status: 'approved' });
+            earnings.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renderEarningsTable(earnings);
+        } catch (error) { console.error('Failed to load earnings history:', error); }
+    }
+    
+    function getPlatformIcon(platform) { const icons = { instagram: 'fa-instagram', tiktok: 'fa-tiktok', youtube: 'fa-youtube', twitter: 'fa-twitter', facebook: 'fa-facebook' }; return icons[platform?.toLowerCase()] || 'fa-link'; }
+    function formatPlatform(platform) { return platform?.charAt(0).toUpperCase() + platform?.slice(1); }
+    
+    function renderEarningsTable(earnings) {
+        const tbody = document.getElementById('earningsTableBody');
+        const emptyState = document.getElementById('emptyEarnings');
+        if (!earnings?.length) { tbody.innerHTML = ''; emptyState.classList.remove('hidden'); return; }
+        emptyState.classList.add('hidden');
+        const filter = document.getElementById('filterType')?.value || 'all';
+        const filtered = filter === 'all' ? earnings : earnings.filter(e => e.type === filter);
+        tbody.innerHTML = filtered.map(e => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="px-6 py-3 text-sm">${new Date(e.date).toLocaleDateString()}</td><td class="px-6 py-3"><div class="flex items-center gap-2"><i class="fab ${getPlatformIcon(e.source)} text-primary text-sm"></i><span class="text-sm">${e.type === 'referral' ? 'Referral Bonus' : formatPlatform(e.source)}</span></div></td><td class="px-6 py-3 text-xs text-muted hide-mobile">${e.details || '—'}</td><td class="px-6 py-3"><span class="text-xs px-2 py-1 rounded-full ${e.type === 'referral' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}">${e.type === 'referral' ? 'Referral' : 'Submission'}</span></td><td class="px-6 py-3 font-medium ${e.status === 'approved' ? 'text-green-400' : 'text-yellow-400'}">$${e.amount.toFixed(2)}</td><td class="px-6 py-3"><span class="status-badge ${e.status === 'approved' ? 'status-approved' : 'status-pending'}">${e.status === 'approved' ? 'Approved' : 'Pending'}</span></td></tr>`).join('');
+    }
+    
+    document.getElementById('filterType')?.addEventListener('change', async () => { await loadEarningsHistory(); });
+    document.getElementById('requestPayoutBtn')?.addEventListener('click', async () => {
+        if (confirm('Request payout?\n\n• Payouts processed weekly\n• You\'ll receive confirmation email\n• Funds arrive in 3-5 business days')) {
+            const btn = document.getElementById('requestPayoutBtn');
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-pulse mr-1"></i> Requesting...';
+            setTimeout(() => { alert('✓ Payout request submitted!\n\nYou\'ll receive a confirmation email shortly.'); btn.innerHTML = 'Requested ✓'; }, 1000);
+        }
+    });
+    document.getElementById('logoutBtn')?.addEventListener('click', () => Auth.logout());
+    
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+        document.addEventListener('click', (e) => { if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open'); });
+    }
+    
+    // Card hover effects
+    document.querySelectorAll('.glass-card').forEach(card => { card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-2px)'; }); card.addEventListener('mouseleave', () => { card.style.transform = 'translateY(0)'; }); });
+    
+    // Mouse glow effect
+    const canvas = document.createElement('div');
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:radial-gradient(600px at var(--x) var(--y), rgba(255, 138, 0, 0.03), transparent 80%)';
+    document.body.prepend(canvas);
+    window.addEventListener('mousemove', (e) => { canvas.style.setProperty('--x', e.clientX + 'px'); canvas.style.setProperty('--y', e.clientY + 'px'); });
+</script>
+</body>
+</html>
