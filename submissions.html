@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Submissions | NaijaAssets Affiliate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome 6 (Free) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+        body {
+            background-color: #0a0a0a;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 138, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 138, 0, 0.05);
+        }
+        .glow-orange-text {
+            text-shadow: 0 0 8px rgba(255, 183, 127, 0.4);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffb77f;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .status-pending_review, .status-pending {
+            background: rgba(234, 179, 8, 0.15);
+            color: #fbbf24;
+        }
+        .status-approved {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+        .status-paid {
+            background: rgba(255, 138, 0, 0.2);
+            color: #ffb77f;
+        }
+        .platform-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+        }
+        .platform-option {
+            position: relative;
+        }
+        .platform-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .platform-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .platform-option input:checked + label {
+            border-color: #ff8a00;
+            background: rgba(255, 138, 0, 0.15);
+            color: #ffb77f;
+        }
+        .file-upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-area:hover, .file-upload-area.dragover {
+            border-color: #ff8a00;
+            background: rgba(255, 138, 0, 0.05);
+        }
+        .mobile-menu-toggle {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: block; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; position: fixed; z-index: 100; }
+            .sidebar.open { transform: translateX(0); }
+        }
+        .submission-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .submission-item:last-child {
+            border-bottom: none;
+        }
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #a1a1aa;
+        }
+        .form-hint {
+            font-size: 0.7rem;
+            color: #a1a1aa;
+            margin-top: 0.25rem;
+        }
+        .form-error {
+            background: rgba(147, 0, 10, 0.2);
+            border-left: 3px solid #ffb4ab;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #ffb4ab;
+            margin-top: 1rem;
+        }
+        .form-success {
+            background: rgba(34, 197, 94, 0.15);
+            border-left: 3px solid #4ade80;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #4ade80;
+            margin-top: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#ffb77f",
+                        "outline-variant": "#564334",
+                        "surface-bright": "#3a3939",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "primary": "#ffb77f",
+                        "on-primary": "#4e2600",
+                        "border": "rgba(255, 255, 255, 0.08)",
+                        "on-primary-fixed-variant": "#6f3900",
+                        "on-secondary-fixed-variant": "#454747",
+                        "tertiary": "#88ceff",
+                        "on-secondary": "#2f3131",
+                        "secondary-container": "#454747",
+                        "inverse-on-surface": "#313030",
+                        "surface-variant": "#353534",
+                        "primary-fixed": "#ffdcc4",
+                        "outline": "#a58c7b",
+                        "secondary": "#c6c6c7",
+                        "text-muted": "#a1a1aa",
+                        "inverse-primary": "#914c00",
+                        "tertiary-fixed-dim": "#88ceff",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#b4b5b5",
+                        "on-background": "#e5e2e1",
+                        "on-primary-container": "#613100",
+                        "on-surface-variant": "#ddc1ae",
+                        "surface-container-highest": "#353534",
+                        "on-tertiary-fixed": "#001e2e",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary-container": "#00b3fc",
+                        "on-primary-fixed": "#2f1500",
+                        "background": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "tertiary-fixed": "#c8e6ff",
+                        "on-tertiary-container": "#004260",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-tertiary": "#00344d",
+                        "surface-dim": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-tint": "#ffb77f",
+                        "glow-orange": "rgba(255, 138, 0, 0.15)",
+                        "primary-container": "#ff8a00",
+                        "surface-container-low": "#1c1b1b",
+                        "surface": "rgba(255, 255, 255, 0.03)",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "inverse-surface": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c"
+                    },
+                    fontFamily: {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen flex overflow-hidden">
+
+<!-- SideNavBar with proper hrefs -->
+<aside class="sidebar hidden md:flex flex-col h-screen left-0 w-64 bg-surface-container border-r border-outline-variant/30 backdrop-blur-xl py-6 px-4 shrink-0 z-50" id="sidebar">
+<div class="mb-10 px-2">
+<a href="dashboard.html" class="font-headline-md text-headline-md text-primary font-bold">NaijaAssets</a>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 opacity-70">Creator Pro</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all font-label-caps text-label-caps group">
+<i class="fas fa-tachometer-alt w-5"></i>
+<span>Dashboard</span>
+</a>
+<a href="referrals.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all font-label-caps text-label-caps group">
+<i class="fas fa-users w-5"></i>
+<span>Referrals</span>
+</a>
+<a href="submissions.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-container/20 text-primary border-r-4 border-primary transition-all font-label-caps text-label-caps group">
+<i class="fas fa-upload w-5"></i>
+<span>Submissions</span>
+</a>
+<a href="earnings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all font-label-caps text-label-caps group">
+<i class="fas fa-dollar-sign w-5"></i>
+<span>Earnings</span>
+</a>
+<a href="settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-all font-label-caps text-label-caps group">
+<i class="fas fa-cog w-5"></i>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/20">
+<div class="glass-card p-3 rounded-lg">
+<p class="text-xs text-text-muted mb-1">Need help?</p>
+<a href="mailto:support@naijaassets.com" class="text-primary text-xs font-medium hover:underline">
+<i class="fas fa-envelope mr-1"></i> Contact Support →
+</a>
+</div>
+</div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 relative h-screen overflow-y-auto">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-4 w-full sticky top-0 z-40 bg-background/80 backdrop-blur-md">
+<div class="flex items-center gap-4 flex-1">
+<button class="mobile-menu-toggle p-2 text-on-surface-variant hover:bg-white/5 rounded-lg md:hidden" id="menuToggle">
+<i class="fas fa-bars text-xl"></i>
+</button>
+<div class="relative w-full max-w-md">
+<i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"></i>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-primary/50 transition-colors" placeholder="Search submissions..." type="text" id="searchInput"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<button class="p-2 text-on-surface-variant hover:bg-white/5 rounded-full transition-colors relative">
+<i class="fas fa-bell"></i>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-white/5 rounded-full transition-colors">
+<i class="fas fa-question-circle"></i>
+</button>
+<div class="h-8 w-[1px] bg-white/10 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-body-sm text-body-sm font-bold" id="userName">Creator</p>
+<p class="font-label-caps text-[10px] text-primary">CREATOR PRO</p>
+</div>
+<button id="logoutBtn" class="text-primary hover:opacity-80 transition">
+<i class="fas fa-sign-out-alt text-xl"></i>
+</button>
+</div>
+</div>
+</header>
+
+<div class="p-8 max-w-7xl mx-auto w-full space-y-8">
+<!-- Page Header -->
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold glow-orange-text">Submit Content</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Share your content links for review and earn commissions on approved submissions</p>
+</div>
+
+<!-- Submission Form -->
+<div class="glass-card rounded-2xl p-6 mb-8">
+<form id="submissionForm" class="space-y-6">
+<!-- Platform Selection -->
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2">Platform *</label>
+<div class="platform-select">
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-instagram" value="instagram" required>
+<label for="platform-instagram">
+<i class="fab fa-instagram text-lg"></i>
+<span>Instagram</span>
+</label>
+</div>
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-tiktok" value="tiktok">
+<label for="platform-tiktok">
+<i class="fab fa-tiktok text-lg"></i>
+<span>TikTok</span>
+</label>
+</div>
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-youtube" value="youtube">
+<label for="platform-youtube">
+<i class="fab fa-youtube text-lg"></i>
+<span>YouTube</span>
+</label>
+</div>
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-twitter" value="twitter">
+<label for="platform-twitter">
+<i class="fab fa-twitter text-lg"></i>
+<span>Twitter/X</span>
+</label>
+</div>
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-facebook" value="facebook">
+<label for="platform-facebook">
+<i class="fab fa-facebook text-lg"></i>
+<span>Facebook</span>
+</label>
+</div>
+<div class="platform-option">
+<input type="radio" name="platform" id="platform-other" value="other">
+<label for="platform-other">
+<i class="fas fa-ellipsis-h text-lg"></i>
+<span>Other</span>
+</label>
+</div>
+</div>
+</div>
+
+<!-- Content URL -->
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="contentUrl">Content URL *</label>
+<input type="url" id="contentUrl" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 transition-colors" placeholder="https://instagram.com/p/ABC123..." required/>
+<p class="form-hint">Direct link to your post, video, or content piece</p>
+</div>
+
+<!-- Proof of Ownership -->
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2">Proof of Ownership *</label>
+<p class="form-hint mb-3">Upload a screenshot or provide a Google Drive link showing you own this content</p>
+
+<!-- Tab Toggle -->
+<div class="flex gap-2 mb-3">
+<button type="button" class="tab-btn active text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-primary/40 transition-colors" data-tab="drive"><i class="fab fa-google-drive mr-1"></i> Google Drive Link</button>
+<button type="button" class="tab-btn text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-primary/40 transition-colors" data-tab="file"><i class="fas fa-upload mr-1"></i> Upload File</button>
+</div>
+
+<!-- Drive Link Tab -->
+<div id="driveTab">
+<input type="url" id="driveLink" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 transition-colors" placeholder="https://drive.google.com/file/d/..."/>
+<p class="form-hint">Make sure link sharing is set to "Anyone with the link"</p>
+</div>
+
+<!-- File Upload Tab -->
+<div id="fileTab" class="hidden">
+<div class="file-upload-area" id="dropZone">
+<i class="fas fa-cloud-upload-alt text-3xl mb-2 text-text-muted"></i>
+<p class="font-medium text-sm">Drag & drop screenshot here</p>
+<p class="text-xs text-text-muted">or click to browse</p>
+<p class="text-xs text-text-muted mt-2">PNG, JPG up to 10MB</p>
+<input type="file" id="fileInput" accept="image/png,image/jpeg" class="hidden"/>
+</div>
+<p id="fileName" class="text-sm text-primary mt-2 hidden"></p>
+</div>
+</div>
+
+<!-- Notes -->
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="notes">Additional Notes</label>
+<textarea id="notes" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 transition-colors" rows="3" placeholder="Any context that might help with review..."></textarea>
+</div>
+
+<!-- Guidelines Reminder -->
+<div class="glass-card p-4 rounded-xl" style="background: rgba(255, 138, 0, 0.08); border-color: rgba(255, 138, 0, 0.3);">
+<div class="flex gap-3">
+<i class="fas fa-info-circle text-primary text-lg"></i>
+<div>
+<p class="font-medium text-sm">Submission Guidelines</p>
+<ul class="text-xs text-text-muted mt-1 space-y-0.5">
+<li>• Content must be original and owned by you</li>
+<li>• No copyrighted material without permission</li>
+<li>• Review takes 24-48 hours</li>
+<li>• Approved submissions earn $2-5 based on platform</li>
+</ul>
+<a href="guidelines.html" class="text-xs text-primary hover:underline mt-1 inline-block">Read full guidelines →</a>
+</div>
+</div>
+</div>
+
+<!-- Submit Button -->
+<button type="submit" id="submitBtn" class="w-full py-4 bg-primary text-on-primary-fixed font-bold rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2">
+<i class="fas fa-paper-plane"></i>
+<span class="btn-text">Submit for Review</span>
+<span class="btn-loading hidden"><i class="fas fa-spinner fa-pulse"></i> Submitting...</span>
+</button>
+
+<div id="formMsg" class="hidden"></div>
+</form>
+</div>
+
+<!-- Submission History -->
+<div class="glass-card rounded-2xl overflow-hidden">
+<div class="p-6 border-b border-white/10 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md font-semibold">Submission History</h3>
+<span class="text-sm text-text-muted" id="submissionCount">0 submissions</span>
+</div>
+
+<div id="submissionsList" class="divide-y divide-white/5">
+<div class="empty-state">
+<i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+<p class="font-medium">No submissions yet</p>
+<p class="text-sm text-text-muted">Submit your first content above to start earning</p>
+</div>
+</div>
+
+<div class="pagination hidden justify-center py-4" id="pagination">
+<button id="prevPage" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"><i class="fas fa-chevron-left mr-1"></i> Previous</button>
+<span class="page-info text-sm text-text-muted px-3" id="pageInfo">Page 1 of 1</span>
+<button id="nextPage" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Next <i class="fas fa-chevron-right ml-1"></i></button>
+</div>
+</div>
+</div>
+
+<!-- Footer with updated year 2026 -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-6 px-8 mt-auto border-t border-outline-variant/20 bg-surface-container-lowest">
+<div class="flex items-center gap-2 mb-4 md:mb-0">
+<span class="font-label-caps text-label-caps text-primary">NaijaAssets</span>
+<span class="text-on-surface-variant text-xs opacity-50">© 2026 All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a href="/privacy" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Privacy</a>
+<a href="/terms" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Terms</a>
+<a href="mailto:support@naijaassets.com" class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors">Contact</a>
+</div>
+</footer>
+</main>
+
+<script type="module">
+    // ========================
+    // SUPABASE INTEGRATION (Skeleton from original submissions.html)
+    // ========================
+    
+    const SUPABASE_URL = 'https://your-project.supabase.co';  // <-- Replace with actual URL
+    const SUPABASE_ANON_KEY = 'your-anon-key';               // <-- Replace with actual key
+    
+    let supabase = null;
+    try {
+        if (typeof supabaseJs !== 'undefined') supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        else if (window.supabase) supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        else {
+            supabase = {
+                auth: { getSession: async () => ({ data: { session: { user: { id: "mock-user" } } }, error: null }), signOut: async () => ({ error: null }) },
+                from: () => ({ insert: async () => ({ error: null }), select: () => ({ eq: () => ({ order: () => ({ range: async () => ({ data: [], error: null, count: 0 }) }) }) }) })
+            };
+        }
+    } catch(e) { supabase = { auth: { getSession: async () => ({ data: { session: { user: { id: "mock-user" } } }, error: null }), signOut: async () => ({ error: null }) }, from: () => ({ insert: async () => ({ error: null }), select: () => ({ eq: () => ({ order: () => ({ range: async () => ({ data: [], error: null, count: 0 }) }) }) }) }) }; }
+    
+    // Mock Database helper
+    const Database = {
+        createSubmission: async (data) => {
+            const { error } = await supabase.from('submissions').insert({
+                platform: data.platform,
+                content_url: data.contentUrl,
+                drive_link: data.driveLink,
+                notes: data.notes,
+                user_id: data.userId,
+                status: 'pending_review',
+                payout_estimate: data.platform === 'youtube' ? 5 : 2
+            });
+            if (error) throw new Error(error.message);
+            return true;
+        },
+        getUserSubmissions: async (userId, { page, limit }) => {
+            const start = (page - 1) * limit;
+            const end = start + limit - 1;
+            const { data, error, count } = await supabase.from('submissions').select('*', { count: 'exact' }).eq('user_id', userId).order('created_at', { ascending: false }).range(start, end);
+            if (error) throw new Error(error.message);
+            return { submissions: data || [], pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) } };
+        }
+    };
+    
+    const Auth = {
+        requireAuth: async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) { window.location.href = 'login.html'; return false; }
+            return true;
+        },
+        getCurrentProfile: async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) return { id: session.user.id, full_name: "Alexander K.", email: session.user.email };
+            return null;
+        },
+        logout: async () => { await supabase.auth.signOut(); window.location.href = 'login.html'; }
+    };
+    
+    let currentUser = null;
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    
+    (async () => {
+        const isAuthenticated = await Auth.requireAuth();
+        if (!isAuthenticated) return;
+        currentUser = await Auth.getCurrentProfile();
+        if (currentUser) document.getElementById('userName').textContent = currentUser.full_name?.split(' ')[0] || 'Creator';
+        await loadSubmissions(1);
+    })();
+    
+    async function loadSubmissions(page) {
+        if (!currentUser?.id) return;
+        try {
+            const { submissions, pagination } = await Database.getUserSubmissions(currentUser.id, { page, limit: itemsPerPage });
+            renderSubmissions(submissions);
+            renderPagination(pagination);
+            currentPage = page;
+            document.getElementById('submissionCount').textContent = `${pagination.total} submission${pagination.total !== 1 ? 's' : ''}`;
+        } catch (error) { console.error('Failed to load submissions:', error); }
+    }
+    
+    function renderSubmissions(submissions) {
+        const container = document.getElementById('submissionsList');
+        if (!submissions?.length) {
+            container.innerHTML = `<div class="empty-state p-8 text-center"><i class="fas fa-inbox text-4xl mb-3 opacity-50"></i><p class="font-medium">No submissions yet</p><p class="text-sm text-text-muted">Submit your first content above to start earning</p></div>`;
+            return;
+        }
+        container.innerHTML = submissions.map(sub => `
+            <div class="submission-item">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2"><i class="fab fa-${sub.platform === 'youtube' ? 'youtube' : sub.platform === 'instagram' ? 'instagram' : sub.platform === 'tiktok' ? 'tiktok' : 'link'} text-primary"></i><span class="font-medium">${sub.platform?.charAt(0).toUpperCase() + sub.platform?.slice(1)}</span></div>
+                    <a href="${sub.content_url}" target="_blank" class="text-primary text-sm hover:underline break-all">${truncateUrl(sub.content_url)}</a>
+                    <div class="flex items-center gap-3 text-xs text-text-muted"><span>${new Date(sub.created_at).toLocaleDateString()}</span>${sub.drive_link ? '<span>• Proof attached</span>' : ''}${sub.notes ? '<span>• Has notes</span>' : ''}</div>
+                </div>
+                <div class="text-right space-y-1"><span class="status-badge status-${sub.status}">${formatStatus(sub.status)}</span><span class="text-primary text-sm font-medium block">Est. $${parseFloat(sub.payout_estimate || 2).toFixed(2)}</span></div>
+            </div>
+        `).join('');
+    }
+    
+    function renderPagination(pagination) {
+        const paginationEl = document.getElementById('pagination');
+        if (pagination.totalPages <= 1) { paginationEl.classList.add('hidden'); return; }
+        paginationEl.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${pagination.page} of ${pagination.totalPages}`;
+        document.getElementById('prevPage').disabled = pagination.page === 1;
+        document.getElementById('nextPage').disabled = pagination.page === pagination.totalPages;
+    }
+    
+    function formatStatus(status) {
+        const map = { pending_review: 'Pending', approved: 'Approved', rejected: 'Rejected', paid: 'Paid' };
+        return map[status] || status;
+    }
+    
+    function truncateUrl(url, maxLength = 40) { if (!url) return ''; if (url.length <= maxLength) return url; return url.substring(0, maxLength - 3) + '...'; }
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'border-primary/40'));
+            btn.classList.add('active', 'border-primary/40');
+            const tab = btn.dataset.tab;
+            document.getElementById('driveTab').classList.toggle('hidden', tab !== 'drive');
+            document.getElementById('fileTab').classList.toggle('hidden', tab !== 'file');
+        });
+    });
+    
+    // File upload handling
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileNameSpan = document.getElementById('fileName');
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFileSelect(e.target.files[0]); });
+    function handleFileSelect(file) {
+        const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!validTypes.includes(file.type)) { alert('Please upload a PNG or JPG image'); return; }
+        if (file.size > 10 * 1024 * 1024) { alert('File must be under 10MB'); return; }
+        fileNameSpan.textContent = `✓ ${file.name}`;
+        fileNameSpan.classList.remove('hidden');
+        setTimeout(() => { document.querySelector('[data-tab="drive"]').click(); alert('Please paste your Google Drive link for proper proof storage.'); }, 100);
+    }
+    
+    // Form submission
+    document.getElementById('submissionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const btnText = btn.querySelector('.btn-text');
+        const btnLoading = btn.querySelector('.btn-loading');
+        const formMsg = document.getElementById('formMsg');
+        btn.disabled = true; btnText.classList.add('hidden'); btnLoading.classList.remove('hidden'); formMsg.classList.add('hidden');
+        try {
+            const platform = document.querySelector('input[name="platform"]:checked')?.value;
+            const contentUrl = document.getElementById('contentUrl').value.trim();
+            const driveLink = document.getElementById('driveLink').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            if (!platform) throw new Error('Please select a platform');
+            if (!contentUrl) throw new Error('Content URL is required');
+            if (!driveLink) throw new Error('Please provide a Google Drive link for proof');
+            await Database.createSubmission({ platform, contentUrl, driveLink, notes, userId: currentUser.id });
+            formMsg.className = 'form-success'; formMsg.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Submission received! Review typically takes 24-48 hours.';
+            formMsg.classList.remove('hidden');
+            document.getElementById('submissionForm').reset();
+            document.querySelectorAll('input[name="platform"]').forEach(r => r.checked = false);
+            fileNameSpan.classList.add('hidden');
+            await loadSubmissions(1);
+        } catch (error) { formMsg.className = 'form-error'; formMsg.innerHTML = error.message || 'Submission failed. Please try again.'; formMsg.classList.remove('hidden'); }
+        finally { btn.disabled = false; btnText.classList.remove('hidden'); btnLoading.classList.add('hidden'); }
+    });
+    
+    document.getElementById('prevPage')?.addEventListener('click', () => { if (currentPage > 1) loadSubmissions(currentPage - 1); });
+    document.getElementById('nextPage')?.addEventListener('click', () => { loadSubmissions(currentPage + 1); });
+    document.getElementById('logoutBtn')?.addEventListener('click', () => { Auth.logout(); });
+    
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+        document.addEventListener('click', (e) => { if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open'); });
+    }
+</script>
+</body>
+</html>
